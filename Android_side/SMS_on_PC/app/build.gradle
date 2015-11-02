@@ -5,8 +5,8 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "net.ddns.acenanter.sms_on_pc"
-        minSdkVersion 15
+        applicationId "fr.isima.sms_on_pc"
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

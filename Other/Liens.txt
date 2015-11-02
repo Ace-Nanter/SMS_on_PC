@@ -1,0 +1,3 @@
+https://github.com/follower/android-background-service-usb-accessory				Android Side
+https://github.com/chris-blay/android-open-accessory-bridge					Android Side
+https://msdn.microsoft.com/fr-fr/library/system.io.ports.serialport(v=vs.110).aspx		C# et USB
