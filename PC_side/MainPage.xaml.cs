@@ -1,7 +1,24 @@
-﻿using Windows.UI.Xaml.Controls;
-using LibUsbDotNet;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
-public static Usbdevice MyUsbDevice;
+using LibUsbDotNet;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.Main;
+
+
+
+
+// Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace PC_side
 {
@@ -13,7 +30,9 @@ namespace PC_side
         public MainPage()
         {
             this.InitializeComponent();
-            console.Text += "Coucou les amis !";
+            UsbRegDeviceList allDevices = UsbDevice.AllDevices;
+            console.Text += allDevices.Count();
         }
+         
     }
 }

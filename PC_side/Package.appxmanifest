@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="54e288f7-6778-4ef2-a332-134402e82934"
-    Publisher="CN=acena_000"
+    Name="4a2d6bf1-26cc-4a15-b9f5-1cf52f63e633"
+    Publisher="CN=Ace Nanter"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="54e288f7-6778-4ef2-a332-134402e82934" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="4a2d6bf1-26cc-4a15-b9f5-1cf52f63e633" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>PC_side</DisplayName>
-    <PublisherDisplayName>acena_000</PublisherDisplayName>
+    <PublisherDisplayName>Ace Nanter</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
