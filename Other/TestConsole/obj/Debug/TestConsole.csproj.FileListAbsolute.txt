@@ -6,3 +6,11 @@ D:\Ace\SkyDrive\Documents\Projets\TestConsole\bin\Debug\LibUsbDotNet.xml
 D:\Ace\SkyDrive\Documents\Projets\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyReference.cache
 D:\Ace\SkyDrive\Documents\Projets\TestConsole\obj\Debug\TestConsole.exe
 D:\Ace\SkyDrive\Documents\Projets\TestConsole\obj\Debug\TestConsole.pdb
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\TestConsole.exe.config
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.exe
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.pdb
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\TestConsole.exe
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\TestConsole.pdb
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\LibUsbDotNet.dll
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\LibUsbDotNet.xml
+D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyReference.cache
