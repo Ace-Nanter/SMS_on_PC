@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*-----------------------------------------------------------------------*/
+/* AVANT TOUT USAGE DU PROGRAMME UTILISER ZADIG SUR LE TELEPHONE UTILISE */
+/*              METTRE EN MODE WINUSB                                    */
+/*-----------------------------------------------------------------------*/
+
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using LibUsbDotNet;
@@ -7,173 +12,197 @@ using LibUsbDotNet.Main;
 namespace TestConsole {
     public class Synchroniser {
 
+        const Boolean DEBUG = true;                      // Lance le mode débug
+
         /// <summary>
-        /// Permet la connexion à un smartphone
+        /// Etablit la connexion avec le téléphone
         /// </summary>
         /// <returns>Retourne le device connecté en mode accessoire</returns>
         public static UsbDevice Connexion() {
-        /*----------------------- Initialisation des variables ---------------------*/
+            /*----------------------- Initialisation des variables ---------------------*/
+            int choix = -1;
             int AOA_Version = 0;                                // Version du protocole d'échange avec l'appareil
             int response = 0;                                   // Entier gérant les retours d'échanges avec l'appareil
-            UsbDeviceFinder Smartphone = new UsbDeviceFinder("YT910PKBQU");       // Numéro de série tel Adrien
-            UsbDevice Device = null;
-            UsbSetupPacket setupPacket;                         // Contenu des paquets envoyés
+            UsbRegDeviceList DeviceList = null;                 // Liste des devices connectés
+            UsbDevice Device = null;                            // Device non configuré
+            UsbSetupPacket requete;                             // Requêtes envoyées
             char[] IObuffer = new char[2];                      // Pour contenir l'API reçue
             string[] hostInformations = new string[6]           // Pour stocker les infos qu'on envoie au téléphone
-                { "Gigabyte",                                   // Constructeur de la machine hôte
-                "MyPC",                                         // Modèle de l'hôte
-                "Adrien_PC",                                    // Description de l'hôte
-                "2",                                            // Version                      (?)
-                "https://github.com/Ace-Nanter/SMS_on_PC",      // URI                          (?)
+                { "ISIMA",                                      // Constructeur de la machine hôte
+                "PC_app_side",                                  // Modèle de l'hôte
+                "A .NET based Android accessory",               // Description de l'hôte
+                "2",                                            // Version de l'application
+                "https://github.com/Ace-Nanter/SMS_on_PC",      // URI
                 "Android Open Accessory Protocol" };            // Description du protocole     (?)
-        /*-----------------------------------------------------------------------------*/
-
+            /*-----------------------------------------------------------------------------*/
             try {
-                // Find and open the usb device
-                Device = UsbDevice.OpenUsbDevice(Smartphone);
+                DeviceList = UsbDevice.AllLibUsbDevices;
+                if (DeviceList == null || DeviceList.Count <= 0)
+                    throw new Exception("Téléphone introuvable !");
+                else if(DeviceList.Count == 1) {
+                    choix = 0;
+                }
+                else {
+                    Console.WriteLine("Appareils disponibles :");
+                    for (int k = 0; k < DeviceList.Count; k++)
+                        Console.WriteLine("{0} - {1}", k, DeviceList[k].FullName);
 
-                // If the device is open and ready
-                if (Device == null) throw new Exception("Appareil introuvable !");
+                    Console.WriteLine("Veuillez choisir un appareil auquel se connecter");
+                    choix = int.Parse(Console.ReadLine());
+                }
+                
+                if (!DeviceList[choix].Open(out Device))
+                    throw new Exception("Impossible de se connecter au téléphone !");
+                /*--------------------- Demande de l'API du téléphone ---------------------*/
+                requete = new UsbSetupPacket(
+                  (Byte)0xc0,                // bmRequestType : type de la requête
+                  (Byte)51,                  // bRequest      : Requête
+                  (Int16)0,                  // wValue        : ?
+                  (Int16)0,                  // wIndex        : Indice de la requête
+                  (Int16)2);                 // wLength       : Taille de la requête
 
-         /*--------------------- Demande de l'API du téléphone ---------------------*/
-                setupPacket = new UsbSetupPacket(
-                  (Byte)0xc0,                // bmRequestType
-                  (Byte)51,                  // bRequest
-                  (Int16)0,                  // wValue
-                  (Int16)0,                  // wIndex
-                  (Int16)2);                 // wLength
-
-                Device.ControlTransfer(ref setupPacket, (char[])IObuffer, 2, out response);     // On demande la version de l'AOA du device
+                // Récupération de la version de l'Android Open Accessory du device
+                Device.ControlTransfer(ref requete, (char[])IObuffer, 2, out response);
                 if (response < 0) throw new Exception("Impossible de récupérer la version AOA de l'appareil");
 
                 AOA_Version = IObuffer[1] << 8 | IObuffer[0];
+                System.Threading.Thread.Sleep(500);            // On laisse le temps aux choses de se faire
+                /*-----------------------------------------------------------------------------*/
 
-                Console.WriteLine("Version de Code du Device : " + AOA_Version);                // TODO : remove
-                System.Threading.Thread.Sleep(1000);            // On laisse le temps aux choses de se faire
-         /*-----------------------------------------------------------------------------*/
-         /*---------------------- Envoi des informations accessory ---------------------*/
-
-         //TODO : voir pourquoi à l'arrivée il n'y a que la première lettre des informations
+                /*---------------------- Envoi des informations accessory ---------------------*/
                 int i = 0;
                 foreach (string info in hostInformations) {
-                    setupPacket = new UsbSetupPacket(0x40, 52, 0, (Int16)i, (Int16)info.Length);
-
-                    Device.ControlTransfer(ref setupPacket,
-                        info.ToCharArray(),
+                    requete = new UsbSetupPacket(0x40, 52, 0, (Int16)i, (Int16)info.Length);
+                    Device.ControlTransfer(ref requete,
+                        Encoding.UTF8.GetBytes(info),
                         info.Length,
                         out response);
-
                     if (response < 0) throw new Exception("Erreur lors de l'identification auprès de l'appareil !");
-
                     i++;
                 }
 
-                Console.WriteLine("Identification Accessory OK");                                      // TODO : remove
-                                                                                                       /*-----------------------------------------------------------------------------*/
-                                                                                                       /*---------------------------- Mise en mode accessory -------------------------*/
-                setupPacket = new UsbSetupPacket(0x40, 53, 0, 0, 0);
-                Device.ControlTransfer(ref setupPacket, null, 0, out response);
+                if (DEBUG) Console.WriteLine("Envoi des informations  Accessory OK");
+                /*-----------------------------------------------------------------------------*/
+                /*---------------------------- Mise en mode accessory -------------------------*/
+                requete = new UsbSetupPacket(0x40, 53, 0, 0, 0);
+                Device.ControlTransfer(ref requete, null, 0, out response);
                 Device.Close();
 
+                System.Threading.Thread.Sleep(2000);            // On laisse le temps aux choses de se faire
                 /*--------------------------------- Reconnexion -------------------------------*/
-                int attempts = 0;
-                UsbDeviceFinder Accessory = new UsbDeviceFinder(0x0FCE, 0x2D00);                   // Nouveau device en mode Acessory
+                DeviceList = UsbDevice.AllLibUsbDevices;
+                if (DeviceList == null || DeviceList.Count <= 0)
+                    throw new Exception("Téléphone introuvable !");
+                else if (DeviceList.Count == 1)
+                    choix = 0;
+                else {
+                    Console.WriteLine("Choississez l'appareil en mode accessory :");
+                    for (int k = 0; k < DeviceList.Count; k++)
+                        Console.WriteLine("{0} - {1}", k, DeviceList[k].FullName);
 
-                while (!Device.Open() && attempts < 5)       // On se donne 5 essais pour la reconnexion
+                    Console.WriteLine("Veuillez choisir un appareil auquel se connecter");
+                    choix = int.Parse(Console.ReadLine());
+                }
+                
+                int attempts = 0;
+                while (attempts < 5)                            // On se reconnecte 5 fois (par précaution)
                 {
-                    Device = UsbDevice.OpenUsbDevice(Accessory);
-                    System.Threading.Thread.Sleep(500);       // On laisse un peu de temps à chaque fois
+                    if (DeviceList[choix].Open(out Device))
+                        break;
+
+                    System.Threading.Thread.Sleep(500);         // On laisse un peu de temps à chaque fois
                     attempts++;
                 }
 
-                if (!Device.Open()) throw new Exception("Impossible de récuperer le device en mode Accessory !");
+                if (Device == null || (!Device.Open()))
+                    throw new Exception("Impossible de récuperer le device en mode Accessory !");
             }
             catch (Exception ex) {
-                Console.WriteLine(ex.Message);              // Si on attrape une exception on l'affiche
-                UsbDevice.Exit();                           // Sortie des fonctions USB
+                Console.WriteLine(ex.Message);                  // Si on attrape une exception on l'affiche
+                if (Device != null) Device.Close();              // On ferme la connexion à l'appareil
                 Device = null;
+                UsbDevice.Exit();
             }
-
             return Device;
         }
-
 
         /// <summary>
         /// Fonction principale
         /// </summary>
         /// <param name="args">Rien à donner pour le moment</param>
         public static void Main(string[] args) {
-            UsbDevice Device = null;                    // Initialisation à null
+            UsbDevice Device = null;                        // Initialisation à null
             ErrorCode ec = ErrorCode.None;
 
             try {
-                Device = Connexion();
+                Device = Connexion();                       // Mise du téléphone en mode accessory
             }
-            catch {
+            catch (Exception e) {
+                Console.WriteLine("Erreur lors de l'initialisation de la connexion avec le téléphone : {0}", e);
                 Device = null;
             }
 
-            if (Device == null) throw new Exception("Problème lors de la connexion au Device !");
-
-            // If this is a "whole" usb device (libusb-win32, linux libusb)
-            // it will have an IUsbDevice interface. If not (WinUSB) the 
-            // variable will be null indicating this is an interface of a 
-            // device.
-            IUsbDevice DeviceInterface = Device as IUsbDevice;
-            if (!ReferenceEquals(DeviceInterface, null)) {
-                // This is a "whole" USB device. Before it can be used, 
-                // the desired configuration and interface must be selected.
-
-                // Select config #1
-                DeviceInterface.SetConfiguration(1);
-
-                // Claim interface #0.
-                DeviceInterface.ClaimInterface(0);
-            }
-
-            // open read endpoint 1.
-            UsbEndpointReader reader = Device.OpenEndpointReader(ReadEndpointID.Ep01);
-
-            // open write endpoint 1.
-            //UsbEndpointWriter writer = Device.OpenEndpointWriter(WriteEndpointID.Ep01);
-
-            // Remove the exepath/startup filename text from the begining of the CommandLine.
-
-            byte[] readBuffer = new byte[1024];             // Buffer pour récupérer les caractères
-            while (ec == ErrorCode.None)                    // Tant que le code d'erreur reste à null
-            {
-                int bytesRead;
-
-                // If the device hasn't sent data in the last 100 milliseconds,
-                // a timeout error (ec = IoTimedOut) will occur. 
-                ec = reader.Read(readBuffer, 100, out bytesRead);
-
-                if (bytesRead == 0) throw new Exception("No more bytes!");              // Exception si Buffer vide alors qu'on est censé avoir lu
-
-                // Write that output to the console.
-                Console.Write(Encoding.Default.GetString(readBuffer, 0, bytesRead));
-            }
             if (Device != null) {
-                if (Device.IsOpen) {
-                    // If this is a "whole" usb device (libusb-win32, linux libusb-1.0)
-                    // it exposes an IUsbDevice interface. If not (WinUSB) the 
-                    // 'wholeUsbDevice' variable will be null indicating this is 
-                    // an interface of a device; it does not require or support 
-                    // configuration and interface selection.
-                    IUsbDevice wholeUsbDevice = Device as IUsbDevice;
-                    if (!ReferenceEquals(wholeUsbDevice, null)) {
-                        // Release interface #0.
-                        wholeUsbDevice.ReleaseInterface(0);
+                try {
+                    if (DEBUG) Console.WriteLine("Passage en mode accessory OK");
+                    IUsbDevice DeviceInterface = Device as IUsbDevice;      // Déclaration de l'interface de l'appareil
+                    if (ReferenceEquals(DeviceInterface, null))
+                        throw new Exception("Erreur lors de la déclaration de l'interface !");
+                    if (!DeviceInterface.SetConfiguration(1))               // Sélection de la configuration de l'interface
+                        throw new Exception("Problème lors de la configuration de l'interface avec le téléphone !");
+                    if (!DeviceInterface.ClaimInterface(0))                 // Récupération de l'interface
+                        throw new Exception("Problème lors de la récupération de l'interface avec le téléphone");
+
+                    //TODO : to remove
+                    Console.Read();                                         // Attente avant lancement de la suite
+                    
+
+                    // open read endpoint 1.
+                    //UsbEndpointReader reader = Device.OpenEndpointReader(ReadEndpointID.Ep01);
+
+                    // Ouverture du premier endpoint d'écriture
+                    UsbEndpointWriter writer = Device.OpenEndpointWriter(WriteEndpointID.Ep05);
+
+                    // Message à envoyer
+                    string message = "Coucou";
+
+                    if (!String.IsNullOrEmpty(message)) {
+                        UsbTransfer bytesWritten;
+
+                        // Envoi de la longueur
+                        Console.WriteLine("Tentative d'envoi de : {0}", message);
+
+                        ec = writer.SubmitAsyncTransfer(Encoding.Default.GetBytes(message), 0, Encoding.Default.GetBytes(message).Length, 100, out bytesWritten);
+
+                        //ec = writer.Write(Encoding.Default.GetBytes(message.Length.ToString()), 2000, out bytesWritten);
+                        if (ec != ErrorCode.None) {
+                            Console.WriteLine(ec);
+                            throw new Exception(UsbDevice.LastErrorString);
+                        }
+                        /*
+                        // Envoi de la chaîne en elle-même
+                        Console.WriteLine("Tentative d'envoi de : {0}", message);
+                        ec = writer.Write(Encoding.Default.GetBytes(message), 2000, out bytesWritten);
+                        if (ec != ErrorCode.None) throw new Exception(UsbDevice.LastErrorString);
+                        */
+                        Console.WriteLine("Envois effectués");
+
+                        bytesWritten.Dispose();
                     }
-                    Device.Close();
                 }
-                Device = null;
-
-                // Free usb resources
-                UsbDevice.Exit();
-
+                catch (Exception e) {
+                    Console.WriteLine("Une exception a eu lieu : {0}", e);
+                }
+                Device.Close();
             }
+            UsbDevice.Exit();
+        }   // Fin Fonction main
+    }       // Fin public class
+}           // Fin namespace
 
-        }
-    }
-}
+/*
+Deux problèmes : utilisation du mauvais endpoint : comment savoir lequel est le bon ?
+Peut-être est-ce aussi du au fait que le thread de réception n'est pas encore ouvert
+Null pointer exception sur Android trouver où quand comment pourquoi
+Pour le souci des informations dont on ne reçoit que la première lettre : convertir la string en bits.
+*/
