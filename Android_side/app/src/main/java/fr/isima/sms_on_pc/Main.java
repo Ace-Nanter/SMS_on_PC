@@ -71,7 +71,8 @@ public class Main extends AppCompatActivity implements USB.Listener {
             @Override
             public void run() {
                 Log.d(Main.class.getSimpleName(), "J'ai lu un truc : " + data);
-                console.append("Données reçues : " + data);
+                console.append("\n" + data);
+                link.write("Coucou");
             }
         });
     }

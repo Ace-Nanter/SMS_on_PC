@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole.csproj", "{9D5AE4F8-EF59-4808-8DB9-96348DF59C92}"
-EndProject
-Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "Diagramme de cours", "..\..\..\Architecture logicielle\Diagramme de cours\Diagramme de cours.modelproj", "{FBB596C7-0AD9-42F2-82F4-AB0CED2CA06E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{9D5AE4F8-EF59-4808-8DB9-96348DF59C92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D5AE4F8-EF59-4808-8DB9-96348DF59C92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D5AE4F8-EF59-4808-8DB9-96348DF59C92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBB596C7-0AD9-42F2-82F4-AB0CED2CA06E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBB596C7-0AD9-42F2-82F4-AB0CED2CA06E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBB596C7-0AD9-42F2-82F4-AB0CED2CA06E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBB596C7-0AD9-42F2-82F4-AB0CED2CA06E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

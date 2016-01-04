@@ -105,18 +105,15 @@ public class USB {
                         break;
                         case READ:
                             Log.d(USB.class.getSimpleName(), "J'essaye de lire");   // TODO : to remove
-                            try {
-                                if (read()) {
-                                    Log.d(USB.class.getSimpleName(), "Appel au listener");
-                                    m_listener.hasRead(m_last_msg);
-                                }
-
-
-                                m_handler.sendEmptyMessageDelayed(READ, 100);       // On relance la lecture
-                            } catch (IOException e) {
-                                Log.d(USB.class.getSimpleName(), "Exception lors de la lecture");   // TODO : to remove
-                                m_handler.sendEmptyMessage(STOP);                   // On arrête le Thread
+                            if (read()) {
+                                Log.d(USB.class.getSimpleName(), "Appel au listener");
+                                m_listener.hasRead(m_last_msg);
                             }
+
+
+                            m_handler.sendEmptyMessageDelayed(READ, 100);       // On relance la lecture
+
+
                         break;
                         case STOP:
                             Looper.myLooper().quit();
@@ -159,14 +156,10 @@ public class USB {
         }
     }
 
-    public boolean read() throws IOException {
+    public boolean read() {
         boolean flag = true;                                                // Flag pour s'assurer que tout va bien
         int readSize = -1;                                                  // Nombre de bits lus
-        final int size;                                                     // Nombre final de bits de données
-        byte[] buffer = new byte[16384];                                  // Buffer pour récupérer le nombre de bits de données
-
-        //final ByteBuffer buffer = ByteBuffer.allocate(0xffff);            // Buffer pour récupérer les données
-
+        byte[] buffer = new byte[16384];                                    // Buffer pour récupérer le nombre de bits de données
 
         try {
             m_last_msg = ">>";
@@ -176,48 +169,24 @@ public class USB {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(USB.class.getSimpleName(), "Read error, exception");
+            Log.d(USB.class.getSimpleName(), "Read error, exception");      // TODO : to remove
+            this.stop();
             flag = false;
         }
+        return flag;
+    }
 
+    public boolean write(String msg) {
+        boolean flag = true;
+        byte[] buffer = msg.getBytes();
 
-
-
-
-
-
-        // Récupération du nombre d'octets de données
-/*        try {
-            readSize = m_input.read(dataSize);
+        try {
+            m_output.write(buffer, 0, buffer.length);
         } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(USB.class.getSimpleName(), "Write error, exception");
             flag = false;
         }
-
-        if(readSize != -1)
-            Log.d(USB.class.getSimpleName(), "J'ai lu quelque chose !");        // TODO : to remove
-
-        if (readSize != dataSize.length) {
-            flag = false;
-            throw new IOException("Problème lors de la lecture dans le buffer");
-        } else {
-            size = ((dataSize[0] & 0xff) << 8) | (dataSize[1] & 0xff);
-        }
-
-        // Récupération des données
-        if (flag) {
-            try {
-                readSize = m_input.read(buffer.array(), 0, size);
-            } catch (IOException e) {
-                flag = false;
-            }
-            if (readSize != size) {
-                flag = false;
-                throw new IOException("Incorrect Size of Data !");
-            }
-            m_last_msg = null;
-            m_last_msg = new String(buffer.array(), 0, size);
-        }
-*/
         return flag;
     }
 
@@ -261,14 +230,6 @@ public class USB {
         m_listener = null;
         m_stop = true;
     }
-
-    /* Mot clé synchronized : empêche l'appel de variables en même temps : mot clé magique,
-    permet le partage des ressource comme avec des mutex */
-    public synchronized boolean write(String s) throws Exception {
-        return false;
-    }
-
-
 
     public interface Listener {                     // Interface
         void hasRead(String s);                     // On a lu quelque chose
