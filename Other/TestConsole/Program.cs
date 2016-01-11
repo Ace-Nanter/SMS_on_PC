@@ -10,12 +10,14 @@ namespace TestConsole {
 
     public class Synchroniser {       
         static readonly bool DEBUG = true;                      // Lance le mode débug
- 
+
         /// <summary>
         /// Fonction principale
         /// </summary>
         /// <param name="args">Rien à donner pour le moment</param>
         public static void Main(string[] args) {
+            
+
             USBManager m = new USBManager();
 
             string s;
@@ -26,7 +28,9 @@ namespace TestConsole {
                 s = Console.ReadLine();
                 m.write(s);
                 m.read();
-
+            }
+            else {
+                Console.WriteLine("Problème");
             }
 
             m.stop();

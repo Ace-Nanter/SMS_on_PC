@@ -32,7 +32,7 @@ namespace TestConsole {
         /// Constructeur par défaut de la classe USBManager
         /// </summary>
         public USBManager() {
-            // Thread de réception à lancer
+            // TODO : voir ce qu'il faut faire
         }
 
         /// <summary>
