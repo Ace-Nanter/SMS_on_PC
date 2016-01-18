@@ -1,0 +1,36 @@
+﻿<Window x:Class="Interface.Contact"
+        x:Name="ContactWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Interface"
+        mc:Ignorable="d"
+        Title="Contact" Height="500" Width="300" Foreground="{StaticResource ApplicationTextColor}" Background="{StaticResource ApplicationBackgroundColor}" 
+        WindowStyle="None" ResizeMode="NoResize"
+        WindowStartupLocation="Manual" Top="0">
+    <Border x:Name="layoutRoot" BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"  Background="{StaticResource ApplicationBackgroundColor}" 
+                    BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="0,0,0,1" MouseDown="Border_MouseDown">
+                <TextBlock Text="Contact" HorizontalAlignment="Left" FontSize="18" Margin="5" Foreground="{StaticResource ApplicationTextColor}"/>
+            </Border>
+            <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" BorderBrush="{StaticResource ApplicationBorderColor}">
+                <TextBlock Text="//Info: Ici résidera la liste des contacts"/>
+            </Border>
+            <Border Grid.Row="2" Grid.ColumnSpan="2" Height="25" Width="150" Margin="0,0,0,10" Background="{StaticResource ApplicationButtonColor}" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
+                <TextBlock TextWrapping="Wrap" >
+                        <Hyperlink x:Name="ButtonAdd" Style="{StaticResource ApplicationHoverButton}" FontSize="12" >+ Ajouter Contact</Hyperlink>
+                </TextBlock>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

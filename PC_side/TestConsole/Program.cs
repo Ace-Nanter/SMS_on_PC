@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using USBLayer;
 
 namespace TestConsole {
-    class Program : USBInterface {
+    class Program {
         static void Main(string[] args) {
             /*USBManager manager = new USBManager();
 
@@ -36,17 +36,18 @@ namespace TestConsole {
             Console.WriteLine(test.ToString(fmt));
             */
 
-            int nbtest = -1;
-            string test = "" + nbtest;
-            Console.WriteLine("La chaîne est : " + test);
-            Console.WriteLine("Il faut {0} bits", Encoding.UTF8.GetByteCount(test));
+            Stack<string> test = new Stack<string>();
 
+            test.Push("yolo");
+            test.Push("yolo2");
 
-
+            Console.WriteLine(test.Pop() + " - taille : " + test.Count);
+            Console.WriteLine(test.Pop() + " - taille : " + test.Count);
+            Console.WriteLine(test.Count);
 
 
         }
-
+        /*
         void USBInterface.hasBeenConnected() {
             throw new NotImplementedException();
         }
@@ -57,7 +58,7 @@ namespace TestConsole {
 
         void USBInterface.hasRead(string msg) {
             throw new NotImplementedException();
-        }
+        }*/
     }
 
     
