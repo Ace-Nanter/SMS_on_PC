@@ -36,20 +36,24 @@ namespace Projet
             this.DragMove();
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
         private void ReduceButton_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+            this.expander.IsExpanded = false;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void ConnexionButton_Click(object sender, RoutedEventArgs e)
         {
             this.StateText.Text = "Connexion ...";
         }
+
+
+
 
         private void expander_Expanded(object sender, RoutedEventArgs e)
         {

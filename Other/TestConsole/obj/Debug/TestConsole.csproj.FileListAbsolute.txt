@@ -14,3 +14,6 @@ D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\TestConsole.pdb
 D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\LibUsbDotNet.dll
 D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\bin\Debug\LibUsbDotNet.xml
 D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyReference.cache
+C:\Users\Kami\Source\Repos\SMS_on_PC\Other\TestConsole\bin\Debug\TestConsole.exe.config
+C:\Users\Kami\Source\Repos\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.exe
+C:\Users\Kami\Source\Repos\SMS_on_PC\Other\TestConsole\obj\Debug\TestConsole.pdb

@@ -10,9 +10,15 @@
                     <Setter Property="Foreground" Value="White" />
                 </Trigger>
             </Style.Triggers>
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="Foreground" Value="Gray" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="ApplicationTitle">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18" />
         </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center" />
