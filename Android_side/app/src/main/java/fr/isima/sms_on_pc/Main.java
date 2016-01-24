@@ -7,62 +7,69 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
-public class Main extends AppCompatActivity implements USB.Listener {
+import fr.isima.sms_on_pc.USB.LinkManager;
+import fr.isima.sms_on_pc.USB.UsbInterface;
 
-    private USB link = null;
+public class Main extends AppCompatActivity implements UsbInterface {
+
+    private LinkManager link = null;
     private TextView console;
-    private Button connect_button;
+    private Button button;
+    private Button testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+        button = (Button) findViewById(R.id.button);
+        if(button != null) {
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Main.this.finish();
+                }
+            });
+        }
+
+        testButton = (Button) findViewById(R.id.testButton);
+        if(testButton != null) {
+            testButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    console.append("\nEnvoi d'un message...");
+                    link.send("Coucou !");
+                }
+            });
+        }
+
+
+        // Récupération du champ texte
         console = (TextView) findViewById(R.id.console);
+
         if(console != null) {
             try {
-                link = new USB(this, this);
+                link = new LinkManager(this, this);                     // Lance la connexion
             } catch (Exception e) {
                 console.append(e.getMessage());
+                link.disconnect();
                 link = null;
             }
-            if (link != null) {
+            if (link.is_connected()) {
                 console.setText(link.get_descriptors());
-                connect_button = (Button) findViewById(R.id.connect_button);
-                connect_button.setOnClickListener(new View.OnClickListener() {
-                    // TODO : mettre un neutraliseur du bouton afin de ne pas pouvoir pas recliquer pendant la tentative de connexion
-                    public void onClick(View v) {
-                        try {
-                            link.connect();
-                        }
-                        catch(Exception e) {
-                            console.append("Une exception est survenue :" + e);
-                        }
-                    }
-                });
             }
             else {
-                console.setText("Erreur lors de l'initialisation de la connexion USB !");
+                console.setText("Aucun appareil détecté !");
             }
         }
     }
 
     @Override
     protected void onDestroy() {
-        link.stop();
-        link = null;
-        super.onDestroy();
-    }
+        if(link != null)
+            link.disconnect();
 
-    // TODO : to remove ?
-    @Override
-    public void hasBeenConnected() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                console.append("\nConnecté !");
-            }
-        });
+        super.onDestroy();
     }
 
     @Override
@@ -70,15 +77,20 @@ public class Main extends AppCompatActivity implements USB.Listener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d(Main.class.getSimpleName(), "J'ai lu un truc : " + data);
-                console.append("\n" + data);
-                link.write("Coucou");
+                console.append("\n>>" + data);
             }
         });
     }
 
     @Override
     public void UsbStop() {
-        console.append("Connexion arrêtée");
+        console.setText("Connexion arrêtée");
+        try {
+            Thread.sleep(3000);
+        }
+        catch (Exception e) {
+            Log.d(Main.class.getSimpleName(), "Erreur lors d'un sleep");
+        }
+        finish();                                                       // Arrêt de l'application
     }
 }

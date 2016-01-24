@@ -2,50 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-using USBLayer;
+using UsbLayer;
 
 namespace TestConsole {
     class Program {
         static void Main(string[] args) {
-            /*USBManager manager = new USBManager();
+            UsbManager manager = new UsbManager();
 
             Console.Write("Veuillez connecter votre appareil s'il vous plaît...");
             Console.ReadLine();
+            try {
+                if (manager.connect()) {
+                    Console.WriteLine("Connexion OK");
 
-            if(manager.connect()) {
-                while (!manager.read()) ;
-                if(!string.Equals(manager.last_msg(), "OK")) {
-                    throw new Exception("Erreur : aucun message reçu de l'appareil !");
+                    manager.send("Coucou");
+                    Thread.Sleep(100);
+                    manager.send("Comment ça va bien ?");
+                    Console.WriteLine("Message envoyés");
+
+                    while (true) {
+                        
+                    }
+                    manager.stop();
                 }
-                Console.WriteLine("Connecté");
-                while (true) {
-                    manager.read();
-                    Console.WriteLine(manager.last_msg());
+                else {
+                    throw new Exception("Erreur lors de la connexion !");
                 }
             }
-            else {
-                throw new Exception("Erreur lors de la connexion !");
+            catch (Exception e) {
+                Console.WriteLine("Exception occured : {0}", e);
             }
-            */
-            /*
-            int test = 35;
-            string fmt = "00000";
-
-            Console.WriteLine(test.ToString(fmt));
-            */
-
-            Stack<string> test = new Stack<string>();
-
-            test.Push("yolo");
-            test.Push("yolo2");
-
-            Console.WriteLine(test.Pop() + " - taille : " + test.Count);
-            Console.WriteLine(test.Pop() + " - taille : " + test.Count);
-            Console.WriteLine(test.Count);
-
-
         }
         /*
         void USBInterface.hasBeenConnected() {

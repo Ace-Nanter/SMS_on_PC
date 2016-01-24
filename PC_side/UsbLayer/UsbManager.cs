@@ -4,12 +4,12 @@ using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
 
-namespace USBLayer {
+namespace UsbLayer {
 
     /// <summary>
-    /// USBManager gère les communications vers le device
+    /// UsbManager gère les communications vers le device
     /// </summary>
-    public class USBManager {
+    public class UsbManager {
         // Attention : Sujet à changement selon si téléphone en mode DEBUG ou non et selon le téléphone utilisé
 
         private readonly string[] hostInformations = new string[6];
@@ -22,9 +22,9 @@ namespace USBLayer {
         private bool is_connected = false;                      // Booléen pour indiquer l'état de la connexion
 
         /// <summary>
-        /// Constructeur par défaut de la classe USBManager
+        /// Constructeur par défaut de la classe UsbManager
         /// </summary>
-        public USBManager(/*USBInterface listener*/) { // (Obligé de préciser pour éviter les confusions)
+        public UsbManager(/*USBInterface listener*/) { // (Obligé de préciser pour éviter les confusions)
             #region Initialisation des attributs
 
             hostInformations = new string[6] {                  // Stocker les infos qu'on envoie au téléphone
@@ -33,7 +33,7 @@ namespace USBLayer {
                 Properties.Resources.description,
                 Properties.Resources.version,
                 Properties.Resources.URI,
-                Properties.Resources.protocole
+                Properties.Resources.protocol
             };
 
             #endregion
@@ -59,6 +59,7 @@ namespace USBLayer {
             char[] buffer = new char[2];                        // Pour contenir l'API reçue
 
             #endregion
+            #region Choix du device
 
             try {
                 DeviceList = UsbDevice.AllLibUsbDevices;
@@ -80,6 +81,7 @@ namespace USBLayer {
                 if (!DeviceList[choix].Open(out m_device))
                     throw new Exception("Impossible de se connecter au téléphone !");
 
+                #endregion
                 #region Demande de l'API du téléphone
 
                 requete = new UsbSetupPacket(
@@ -162,7 +164,7 @@ namespace USBLayer {
                         throw new Exception("Problème lors de la récupération de l'interface avec le téléphone");
 
                     // Activation de la lecture/écriture
-                    //receiver = new Receiver(m_device);
+                    m_receiver = new Receiver(this);
                     m_sender = new Sender(this);
 
                     #endregion
@@ -172,6 +174,7 @@ namespace USBLayer {
                 flag = false;
                 is_connected = false;
                 // TODO : un petit log ?
+                Console.WriteLine(e);
                 this.stop();                                        // On arrête tout
             }
 
@@ -185,11 +188,16 @@ namespace USBLayer {
         /// Libère toutes les ressources utilisées avant de déinstancier la classe
         /// </summary>
         public void stop() {
-            //m_receiver.stop();                                        // Arrêt du Receiver
-            if (m_sender.stop()) {                                    // Arrêt du Sender
-                // TODO : communiquer avec le display pour indiquer qu'il restait des messages à envoyer
+            if(m_sender != null && m_sender.active()) {
+                if (m_sender.stop()) {                                      // Arrêt du Sender
+                                                                            // TODO : communiquer avec le display pour indiquer qu'il restait des messages à envoyer
+                }
             }
 
+            if(m_receiver != null && m_receiver.active()) {                 // Arrêt du Receiver
+                m_receiver.stop();
+            }
+            
             m_receiver = null;                                        // Désinstanciation du lecteur
             m_sender = null;
 

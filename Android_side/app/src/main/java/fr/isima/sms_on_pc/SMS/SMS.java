@@ -1,4 +1,4 @@
-package fr.isima.sms_on_pc;
+package fr.isima.sms_on_pc.SMS;
 
 /**
  * Created by Ace Nanter on 03/01/2016.
