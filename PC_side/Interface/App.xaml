@@ -1,7 +1,7 @@
-﻿<Application x:Class="Interface.App"
+﻿<Application x:Class="Projet.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Interface"
+             xmlns:local="clr-namespace:Projet"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style TargetType="{x:Type Hyperlink}" x:Key="ApplicationHoverButton">
@@ -10,9 +10,15 @@
                     <Setter Property="Foreground" Value="White" />
                 </Trigger>
             </Style.Triggers>
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="Foreground" Value="Gray" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="ApplicationTitle">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18" />
         </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center" />

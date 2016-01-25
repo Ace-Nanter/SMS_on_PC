@@ -13,38 +13,50 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Interface {
+namespace Projet
+{
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : Window
+    {
 
         Contact ct;
 
-        public MainWindow() {
+        public MainWindow()
+        {
             InitializeComponent();
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e) {
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
             this.DragMove();
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e) {
+        private void ReduceButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+            this.expander.IsExpanded = false;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
             Application.Current.Shutdown();
         }
 
-        private void ReduceButton_Click(object sender, RoutedEventArgs e) {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void ConnexionButton_Click(object sender, RoutedEventArgs e) {
+        private void ConnexionButton_Click(object sender, RoutedEventArgs e)
+        {
             this.StateText.Text = "Connexion ...";
         }
 
-        private void expander_Expanded(object sender, RoutedEventArgs e) {
+
+
+
+        private void expander_Expanded(object sender, RoutedEventArgs e)
+        {
             ct = new Contact();
             ct.Show();
 
@@ -52,7 +64,8 @@ namespace Interface {
             cv.Show();
         }
 
-        private void expander_Collapsed(object sender, RoutedEventArgs e) {
+        private void expander_Collapsed(object sender, RoutedEventArgs e)
+        {
             ct.Close();
         }
     }
