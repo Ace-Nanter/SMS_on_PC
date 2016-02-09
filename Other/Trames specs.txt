@@ -13,3 +13,14 @@ SMSBODY:<message>
 
 
 CONTACT:<nom><num>
+
+
+Objet SMS
+
+- body
+- nb pages
+- date
+- contact		(Objet contact)
+- Accusé ?
+
+--> segmenter le nombre de pages a chaque modifications
