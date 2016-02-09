@@ -26,6 +26,7 @@ public class Receiver {
             throw new Exception("Exception occurred when creating Receiver");
         }
         m_input = new FileInputStream(fd);
+// TODO : ne marche pas :        m_input.reset();                                // Actualize received data
         m_listener = listener;
 
         m_readThread = new readThread();

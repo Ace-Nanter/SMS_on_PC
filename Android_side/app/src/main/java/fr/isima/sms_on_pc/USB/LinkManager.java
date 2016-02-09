@@ -23,10 +23,12 @@ public class LinkManager {
     private static final int TENTATIVES_MAX = 5;                // 5 tentatives de connexion
     private static final int CONNECTION_TIMEOUT = 2000;         // Timeout de connexion : 2 secondes
 
+    private UsbInterface m_listener;                            // Interface
+
     private UsbManager m_manager;                               // Manager USB d'Android
     private ParcelFileDescriptor m_device;                      // Device récupéré
 
-    private UsbInterface m_listener;                            // Interface
+    private UsbConnectThread m_thread;                          // Thread pour la connexion
 
     private boolean m_connected = false;                        // Booléen pour savoir si on est connecté ou non au PC
 
@@ -41,42 +43,46 @@ public class LinkManager {
         m_manager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         m_listener = listener;
 
-        connect();
+        m_thread = new UsbConnectThread();
+        m_thread.start();
     }
 
     /**
      * Connect to the device
-     * @return true if the connection is established otherwise wrong
      */
-    public boolean connect() {
-        int tentatives = 0;
-        while (!m_connected && tentatives < TENTATIVES_MAX) {
-            final UsbAccessory[] m_list_devices = m_manager.getAccessoryList();     // Récupération de la liste des devices connectés
-            if (m_list_devices != null && m_list_devices.length > 0) {
-                m_device = m_manager.openAccessory(m_list_devices[0]);              // Récupération du device
-                if (m_device != null) {
-                    final FileDescriptor fd = m_device.getFileDescriptor();         // Récupération du File Descriptor
-                    if(fd != null) {
-                        try {
-                            m_sender = new Sender(fd);
-                            m_receiver = new Receiver(fd, m_listener);
-                            m_connected = true;                                     // Le device est connecté
-                        }
-                        catch (Exception e) {
-                            m_connected = false;
+    private class UsbConnectThread extends Thread {
+        @Override
+        public void run() {
+            int tentatives = 0;
+            while (!m_connected && tentatives < TENTATIVES_MAX) {
+                final UsbAccessory[] m_list_devices = m_manager.getAccessoryList();     // Récupération de la liste des devices connectés
+                if (m_list_devices != null && m_list_devices.length > 0) {
+                    m_device = m_manager.openAccessory(m_list_devices[0]);              // Récupération du device
+                    if (m_device != null) {
+                        final FileDescriptor fd = m_device.getFileDescriptor();         // Récupération du File Descriptor
+                        if(fd != null) {
+                            try {
+                                m_sender = new Sender(fd);
+                                m_receiver = new Receiver(fd, m_listener);
+                                m_connected = true;                                     // Le device est connecté
+                            }
+                            catch (Exception e) {
+                                m_connected = false;
+                                Log.d(LinkManager.class.getSimpleName(), "An exception occured : " + e);
+                            }
                         }
                     }
                 }
+                // On laisse le temps avant de réessayer
+                try {
+                    Thread.sleep(CONNECTION_TIMEOUT);
+                } catch (InterruptedException e) {
+                    tentatives--;                                                       // Si le sleep échoue on laisse une tentative de plus
+                }
+                tentatives++;
             }
-            // On laisse le temps avant de réessayer
-            try {
-                Thread.sleep(CONNECTION_TIMEOUT);
-            } catch (InterruptedException e) {
-                tentatives--;                                                       // Si le sleep échoue on laisse une tentative de plus
-            }
-            tentatives++;
+            m_listener.Connected(m_connected);                                          // On prévient l'interface graphique
         }
-        return m_connected;
     }
 
     /**

@@ -1,0 +1,15 @@
+PC -> Tel				Envoi de message
+
+SMSHEADER:<num>:<nbcom>
+SMSBODY:<message>
+
+CONTACT:<nom><num>
+
+
+Tel -> PC				Réception de message
+
+SMSHEADER:<num>:<date>:<nbcom>
+SMSBODY:<message>
+
+
+CONTACT:<nom><num>

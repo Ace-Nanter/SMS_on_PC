@@ -16,15 +16,15 @@ namespace TestConsole {
             Console.ReadLine();
             try {
                 if (manager.connect()) {
+                    string msg = "";
                     Console.WriteLine("Connexion OK");
 
-                    manager.send("Coucou");
-                    Thread.Sleep(100);
-                    manager.send("Comment ça va bien ?");
-                    Console.WriteLine("Message envoyés");
-
-                    while (true) {
-                        
+                    while(!string.Equals("STOP", msg)) {
+                        Console.WriteLine("Entrez le message à envoyer :");
+                        msg = Console.ReadLine();
+                        manager.send(msg);
+                        Console.WriteLine("Envoi du message : {0}", msg);
+                        Thread.Sleep(100);
                     }
                     manager.stop();
                 }
