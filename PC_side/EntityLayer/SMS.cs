@@ -12,14 +12,26 @@ namespace EntityLayer
     /// </summary>
     public class SMS
     {
+        public static int id_setter = 0;
+
         private static readonly int PAGE_SIZE = 140;
 
+        private int m_id;                           // ID of the message
         private string m_body;                      // Body of the message
         private int m_nbPages;                      // Number of pages contained in the SMS
         private DateTime m_date;                    // Date it was sent/received
         private Contact m_contact;                  // Contact associated to the message
         private bool m_received;                    // True if the message was received, wrong if it was sent
         private bool m_notified;                    // Was the message received ?
+
+        public SMS() {
+
+        }
+
+        
+        /*public SMS(m_body, m_date, m_received) {
+
+        }*/
 
         public string Body
         {
@@ -74,6 +86,7 @@ namespace EntityLayer
         /// </summary>
         /// <returns></returns>
         public bool send(UsbManager manager) {
+
             string buffer = "";
 
             buffer = "SMSHEADER:" + Contact.Num + ":" + NbPages;

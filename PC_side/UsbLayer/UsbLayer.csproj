@@ -49,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ReceiveHandler.cs" />
     <Compile Include="Receiver.cs" />
     <Compile Include="Sender.cs" />
     <Compile Include="UsbInterface.cs" />

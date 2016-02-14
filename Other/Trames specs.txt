@@ -1,16 +1,29 @@
-PC -> Tel				Envoi de message
+					PC -> Tel	
+	
+Envoi de message
 
-SMSHEADER:<num>:<nbcom>
+SMSHEADER:<id>:<num>:<nbcom>
 SMSBODY:<message>
+
+Envoi de contact après création
 
 CONTACT:<nom><num>
 
 
-Tel -> PC				Réception de message
+
+
+					Tel -> PC
+					
+Réception de message
 
 SMSHEADER:<num>:<date>:<nbcom>
 SMSBODY:<message>
 
+Envoi accusé :
+
+SMSACK:<id>
+
+Envoi de contact : export
 
 CONTACT:<nom><num>
 

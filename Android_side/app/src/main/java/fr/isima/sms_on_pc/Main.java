@@ -4,8 +4,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;                    // TODO : to remove
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -25,16 +27,18 @@ public class Main extends AppCompatActivity implements UsbInterface {
         setContentView(R.layout.activity_main);                 // Définition de la vue
 
         button = (Button) findViewById(R.id.button);            // Recherche du bouton
+
+        // Ajout listener "Stop"
         if(button != null) {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Main.this.finish();
+                    System.exit(0);
                 }
             });
         }
         else {
             Log.d(Main.class.getSimpleName(), "No way to get exit button !");
-            Main.this.finish();
+            System.exit(0);
         }
 
         // Récupération du champ texte
@@ -42,44 +46,39 @@ public class Main extends AppCompatActivity implements UsbInterface {
 
         if(console != null) {
             console.setText("Connexion en cours...");
+
+            // Launch the connexion
             try {
-                link = new LinkManager(this, this);                     // Lance la connexion
+                link = new LinkManager(this, this);
             } catch (Exception e) {
                 console.append(e.getMessage());
                 Log.d(Main.class.getSimpleName(), "An exception occurred : " + e);
                 link.disconnect();
                 link = null;
             }
-            Uri sentURI = Uri.parse("content://sms/sent");
-
-            Cursor cur = getContentResolver().query(sentURI, null, null, null, null);
-
-            if (cur.moveToFirst()) {
-                if (cur != null) {
-                    String msgData = "";
-                    for (int idx = 0; idx < cur.getColumnCount(); idx++) {
-                        msgData += "\n" + cur.getColumnName(idx) + ":" + cur.getString(idx);
-                    }
-                    console.append(msgData);
-                }
-            }
-            else {
-                console.append("Problème : messagerie vide !");
-            }
         }
         else {
             Log.d(Main.class.getSimpleName(), "No way to get text display !");
-            Main.this.finish();
+            System.exit(0);
         }
-
 
         // TODO : a supprimer
         testButton = (Button) findViewById(R.id.testButton);
         if(testButton != null) {
             testButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    console.append("\nEnvoi d'un message...");
-                    link.send("Coucou !");
+                    EditText form = (EditText) findViewById(R.id.editText);
+
+
+                    if(link != null && link.is_connected()) {
+                        String buffer = "" + form.getText();
+
+                        console.append("\nEnvoi de " + buffer);
+                        link.send(buffer);
+                    }
+                    else {
+                        console.append("Envoi impossible !");
+                    }
                 }
             });
         }
@@ -87,9 +86,13 @@ public class Main extends AppCompatActivity implements UsbInterface {
 
     @Override
     protected void onDestroy() {
+
+        // Disconnect the threads
         if(link != null)
             link.disconnect();
 
+        // Force kill
+        android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();
     }
 
@@ -130,6 +133,6 @@ public class Main extends AppCompatActivity implements UsbInterface {
         catch (Exception e) {
             Log.d(Main.class.getSimpleName(), "Erreur lors d'un sleep");
         }
-        finish();                                                       // Arrêt de l'application
+        System.exit(0);
     }
 }

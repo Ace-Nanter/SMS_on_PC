@@ -6,18 +6,15 @@
 
 package fr.isima.sms_on_pc.USB;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.ParcelFileDescriptor;
 import android.content.Context;
 import android.hardware.usb.*;
-import android.util.Log;                                        // TODO : to remove
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 public class LinkManager {
     private static final int TENTATIVES_MAX = 5;                // 5 tentatives de connexion
@@ -28,61 +25,80 @@ public class LinkManager {
     private UsbManager m_manager;                               // Manager USB d'Android
     private ParcelFileDescriptor m_device;                      // Device récupéré
 
-    private UsbConnectThread m_thread;                          // Thread pour la connexion
+    private Thread m_thread;                                    // Thread pour la connexion
+    private BroadcastReceiver m_disconnectReceiver;             // Détecte une déconnexion
 
     private boolean m_connected = false;                        // Booléen pour savoir si on est connecté ou non au PC
 
     // Read/Write variables
     private Receiver m_receiver = null;                         // Receiver
     private Sender m_sender = null;                             // Sender
+    private ReceiveHandler m_handler = null;                    // Handler
 
     public LinkManager(final Context context, final UsbInterface listener) throws Exception {
         if (context == null || listener == null) {
             throw new Exception("Problème lors de l'instanciation de la connexion USB !");
         }
+
+        final LinkManager link = this;
         m_manager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         m_listener = listener;
 
-        m_thread = new UsbConnectThread();
-        m_thread.start();
-    }
-
-    /**
-     * Connect to the device
-     */
-    private class UsbConnectThread extends Thread {
-        @Override
-        public void run() {
-            int tentatives = 0;
-            while (!m_connected && tentatives < TENTATIVES_MAX) {
-                final UsbAccessory[] m_list_devices = m_manager.getAccessoryList();     // Récupération de la liste des devices connectés
-                if (m_list_devices != null && m_list_devices.length > 0) {
-                    m_device = m_manager.openAccessory(m_list_devices[0]);              // Récupération du device
-                    if (m_device != null) {
-                        final FileDescriptor fd = m_device.getFileDescriptor();         // Récupération du File Descriptor
-                        if(fd != null) {
-                            try {
-                                m_sender = new Sender(fd);
-                                m_receiver = new Receiver(fd, m_listener);
-                                m_connected = true;                                     // Le device est connecté
-                            }
-                            catch (Exception e) {
-                                m_connected = false;
-                                Log.d(LinkManager.class.getSimpleName(), "An exception occured : " + e);
+        m_thread = new Thread(new Runnable() {
+            /**
+             * Connect to the device
+             */
+            @Override
+            public void run() {
+                int tentatives = 0;
+                while (!m_connected && tentatives < TENTATIVES_MAX) {
+                    final UsbAccessory[] m_list_devices = m_manager.getAccessoryList();     // Récupération de la liste des devices connectés
+                    if (m_list_devices != null && m_list_devices.length > 0) {
+                        m_device = m_manager.openAccessory(m_list_devices[0]);              // Récupération du device
+                        if (m_device != null) {
+                            final FileDescriptor fd = m_device.getFileDescriptor();         // Récupération du File Descriptor
+                            if(fd != null) {
+                                try {
+                                    m_sender = new Sender(fd);
+                                    m_receiver = new Receiver(fd, m_listener);
+                                    m_handler = new ReceiveHandler(link);
+                                    m_connected = true;                                     // Le device est connecté
+                                    send("OK");                                             // Envoi d'un acquittement au PC
+                                }
+                                catch (Exception e) {
+                                    m_connected = false;
+                                    Log.d(LinkManager.class.getSimpleName(), "An exception occured : " + e);
+                                }
                             }
                         }
                     }
+                    // On laisse le temps avant de réessayer
+                    try {
+                        Thread.sleep(CONNECTION_TIMEOUT);
+                    } catch (InterruptedException e) {
+                        tentatives--;                                                       // Si le sleep échoue on laisse une tentative de plus
+                    }
+                    tentatives++;
                 }
-                // On laisse le temps avant de réessayer
-                try {
-                    Thread.sleep(CONNECTION_TIMEOUT);
-                } catch (InterruptedException e) {
-                    tentatives--;                                                       // Si le sleep échoue on laisse une tentative de plus
-                }
-                tentatives++;
+                m_listener.Connected(m_connected);                                          // On prévient l'interface graphique
             }
-            m_listener.Connected(m_connected);                                          // On prévient l'interface graphique
-        }
+        });
+
+        m_thread.start();
+
+        m_disconnectReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
+                    UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+                    if (accessory != null) {
+                        disconnect();
+                    }
+                }
+            }
+        };
     }
 
     /**
@@ -123,6 +139,21 @@ public class LinkManager {
     }
 
     /**
+     * Get the last String sent
+     * @return The last String sent
+     */
+    public String getLastReceived() {
+        return m_receiver.getLast();
+    }
+
+    /**
+     * Pop the sent list next to the receiving of an acquittance
+     */
+    public void popSentList() {
+        m_sender.pop();
+    }
+
+    /**
      * Transmit the message to send to the sender
      * @param msg
      */
@@ -137,6 +168,11 @@ public class LinkManager {
         if (m_connected) {
             m_connected = false;
         }
+
+        if(m_handler != null) {
+            m_handler.stop();
+        }
+
         if (m_sender != null && m_sender.is_active()) {
             if(m_sender.stop()) {
                 Log.d(LinkManager.class.getSimpleName(), "There was non-send message !");
@@ -144,7 +180,10 @@ public class LinkManager {
             }
         }
         if(m_receiver != null && m_receiver.is_active()) {
-            m_receiver.stop();
+            if(m_receiver.stop()) {
+                Log.d(LinkManager.class.getSimpleName(), "All the message were not handled !");
+                // TODO : autre traitement ?
+            }
         }
 
         if (m_device != null) {

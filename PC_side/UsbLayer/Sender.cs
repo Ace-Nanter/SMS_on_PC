@@ -12,11 +12,11 @@ namespace UsbLayer {
     class Sender {
 
         // Constantes
-        private readonly WriteEndpointID writeEndpoint = WriteEndpointID.Ep05;      // 0x05 ==> 5 en décimal ==> Endpoint 5
+        private readonly WriteEndpointID writeEndpoint = WriteEndpointID.Ep02;      // 0x02 ==> 2 en décimal ==> Endpoint 2
         private readonly int timeout = int.Parse(Properties.Resources.timeout);     // timeout : 100ms
 
         private UsbEndpointWriter m_writer = null;                                  // Endpoint d'écriture
-        private Stack<string> m_toSend;                                             // Pile de messages à envoyer
+        private Queue<string> m_toSend;                                             // FIFO des messages à envoyer
         private UsbManager m_manager = null;                                        // Référence au manager
         private Thread m_writeThread = null;                                        // Thread d'envoi
         private bool m_stop = false;                                                // Variable d'arrêt du thread d'envoi
@@ -26,7 +26,7 @@ namespace UsbLayer {
                 m_manager = manager;
                 m_writer = m_manager.getDevice().OpenEndpointWriter(writeEndpoint);
                 m_writer.Flush();
-                m_toSend = new Stack<string>();                                     // Initialisation de la pile
+                m_toSend = new Queue<string>();                                     // Initialisation de la pile
 
                 m_writeThread = new Thread(this.doSend);                            // Création du thread
                 m_writeThread.Start();                                              // Lancement du thread
@@ -34,7 +34,7 @@ namespace UsbLayer {
         }
 
         public void send(string msg) {
-            m_toSend.Push(msg);
+            m_toSend.Enqueue(msg);
         }
 
         public bool active() {
@@ -48,44 +48,69 @@ namespace UsbLayer {
         public void doSend() {
             ErrorCode ec = ErrorCode.None;
             UsbTransfer bytesWritten;
+            
+            int tryLeft = 5;
             string msg = null;
-
             string length = "";
             byte[] sizeBuffer;
             byte[] buffer;
 
             while (!m_stop) {
-                if (m_toSend.Count > 0) {
-                    msg = m_toSend.Pop();                                               // Récupération de la chaîne à envoyer
-                    if (!string.IsNullOrEmpty(msg)) {
-                        try {
-                            #region Envoi de la longueur
+                if (m_toSend.Count > 0) {                                                   // Si la file n'est pas vide
+                    msg = m_toSend.Peek();                                                  // Récupération de la chaîne à envoyer
+                    if (!string.IsNullOrEmpty(msg)) {                                       // Si cette chaîne est viable
+                        tryLeft = 5;
 
-                            length = "" + Encoding.UTF8.GetByteCount(msg);
-                            sizeBuffer = Encoding.UTF8.GetBytes(length);
-                            ec = m_writer.SubmitAsyncTransfer(sizeBuffer, 0, sizeBuffer.Length, timeout, out bytesWritten);
-                            checkErrors(ec, bytesWritten, sizeBuffer.Length);               // Vérification des erreurs
-                            bytesWritten.Dispose();
+                        // Tant qu'on a pas réussi à envoyer
+                        while (m_toSend.Count > 0 && string.Equals(msg, m_toSend.Peek()) && tryLeft > 0) {
+                            try {
+                                #region Envoi de la longueur
 
-                            #endregion
-                            #region Encodage du message
+                                length = "" + Encoding.UTF8.GetByteCount(msg);
+                                sizeBuffer = Encoding.UTF8.GetBytes(length);
+                                ec = m_writer.SubmitAsyncTransfer(sizeBuffer, 0, sizeBuffer.Length, timeout, out bytesWritten);
+                                checkErrors(ec, bytesWritten, sizeBuffer.Length);           // Vérification des erreurs
+                                bytesWritten.Dispose();
 
-                            buffer = new byte[int.Parse(length)];                           // Création d'un buffer de taille appropriée
-                            buffer = Encoding.UTF8.GetBytes(msg);
-                            ec = m_writer.SubmitAsyncTransfer(buffer, 0, buffer.Length, timeout, out bytesWritten);
-                            checkErrors(ec, bytesWritten, buffer.Length);
-                            bytesWritten.Dispose();
+                                #endregion
+                                #region Encodage du message
 
-                            #endregion
+                                buffer = new byte[int.Parse(length)];                       // Création d'un buffer de taille appropriée
+                                buffer = Encoding.UTF8.GetBytes(msg);
+                                ec = m_writer.SubmitAsyncTransfer(buffer, 0, buffer.Length, timeout, out bytesWritten);
+                                checkErrors(ec, bytesWritten, buffer.Length);
+                                bytesWritten.Dispose();
+
+                                #endregion
+                            }
+                            catch (Exception e) {
+                                Console.WriteLine("An exception occured : " + e);
+                            }
+
+                            // Si on a un ACK à envoyer, on déqueue
+                            if(string.Equals(msg, "ACK")) {
+                                pop();
+                                break;
+                            }
+
+                            Thread.Sleep(500);
+                            tryLeft--;
                         }
-                        catch (Exception e) {
-                            m_stop = true;
-                            // TODO : traitement pour récupérer l'erreur ?
+
+                        if(m_toSend.Count > 0 && string.Equals(msg, m_toSend.Peek())) {
+                            Console.WriteLine("Fail to send : {0}", msg);
+                            pop();
                         }
                     }
                 }
-                Thread.Sleep(500);
             }
+        }
+
+        /// <summary>
+        /// Supprime l'élément de la pile du dessus
+        /// </summary>
+        public void pop() {
+            m_toSend.Dequeue();
         }
 
         /// <summary>

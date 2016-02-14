@@ -1,13 +1,10 @@
 package fr.isima.sms_on_pc.USB;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.PriorityQueue;
 
 /**
  * Created by Ace Nanter on 19/01/2016.
@@ -16,6 +13,7 @@ public class Receiver {
     private boolean m_stop = false;                     // Définit si le receiver est actif ou non
     private readThread m_readThread = null;             // Thread qui permet de recevoir
     private FileInputStream m_input = null;             // Canal d'entrée
+    private PriorityQueue<String> m_Received;                   // Pile qui contient les messages reçus
 
     private UsbInterface m_listener;                    // Listener pour prévenir l'interface graphique
 
@@ -26,8 +24,9 @@ public class Receiver {
             throw new Exception("Exception occurred when creating Receiver");
         }
         m_input = new FileInputStream(fd);
-// TODO : ne marche pas :        m_input.reset();                                // Actualize received data
         m_listener = listener;
+
+        m_Received = new PriorityQueue<>();
 
         m_readThread = new readThread();
         m_readThread.start();
@@ -44,20 +43,20 @@ public class Receiver {
             byte[] buffer;
 
             while(!m_stop) {
-                dataLength = -1;
                 try {
                     // Get the length
                     if (read(sizeBuffer)) {
                         dataLength = getInt(sizeBuffer);
-                        if(dataLength != -1) {
-
+                        if(dataLength > 0) {
                             // Get the message
                             buffer = new byte[dataLength];
                             if (read(buffer)) {
                                 msg = new String(buffer);
-                                if(msg != null && !msg.isEmpty())
+                                if(msg != null && !msg.isEmpty()) {
                                     // Transmit what was received
-                                    m_listener.hasRead(new String(buffer));
+                                    m_Received.add(msg);
+                                    m_listener.hasRead(msg);
+                                }
                             }
                         }
                     }
@@ -90,9 +89,17 @@ public class Receiver {
         }
     }
 
-    public void stop() {
+    public String getLast() {
+        return m_Received.poll();
+    }
+
+    public boolean stop() {
         try {
             m_stop = true;
+            if(m_readThread.isAlive()) {
+                m_readThread.interrupt();
+            }
+
             m_input.close();
         }
         catch (Exception e) {
@@ -101,5 +108,7 @@ public class Receiver {
 
         m_input = null;
         m_readThread = null;
+
+        return (m_Received.isEmpty());
     }
 }

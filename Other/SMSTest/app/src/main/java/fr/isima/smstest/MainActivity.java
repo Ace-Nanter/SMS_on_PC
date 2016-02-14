@@ -28,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String testString = "Ceci est un très très très très long long long fais chier c'est trop long d'écrire un putain de message super long de la mort qui tue ah je crois que j'y suis presque encore un petit effort";
+
                 SmsManager manager = SmsManager.getDefault();
-                manager.sendTextMessage("0647657049", null, "Coucou !", null, null);
+                manager.sendTextMessage("0647657049", null, testString, null, null);
 
                 Snackbar.make(view, "Done !", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

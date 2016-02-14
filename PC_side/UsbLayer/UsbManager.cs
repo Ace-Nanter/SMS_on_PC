@@ -18,6 +18,7 @@ namespace UsbLayer {
         private IUsbDevice DeviceInterface = null;              // Interface du device
         private Receiver m_receiver = null;                     // Classe qui permet de recevoir
         private Sender m_sender = null;                         // Classe qui permet d'envoyer
+        private ReceiveHandler m_handler = null;                // Classe qui permet de gérer les messages reçus
 
         private bool is_connected = false;                      // Booléen pour indiquer l'état de la connexion
 
@@ -166,6 +167,7 @@ namespace UsbLayer {
                     // Activation de la lecture/écriture
                     m_receiver = new Receiver(this);
                     m_sender = new Sender(this);
+                    m_handler = new ReceiveHandler(this);
 
                     #endregion
                 }
@@ -181,6 +183,22 @@ namespace UsbLayer {
             return flag;
         }
 
+        /// <summary>
+        /// Return the last string read by the reader
+        /// </summary>
+        /// <returns>The last string read</returns>
+        public string getLastReceived() {
+            return m_receiver.getLast();
+        }
+
+        public void popSending() {
+            m_sender.pop();
+        }
+
+        /// <summary>
+        /// Send a message by USB
+        /// </summary>
+        /// <param name="msg">Message to send</param>
         public void send(string msg) {
             m_sender.send(msg);
         }
@@ -188,7 +206,12 @@ namespace UsbLayer {
         /// Libère toutes les ressources utilisées avant de déinstancier la classe
         /// </summary>
         public void stop() {
-            if(m_sender != null && m_sender.active()) {
+
+            if(m_handler != null) {
+                m_handler.stop();
+            }
+
+            if (m_sender != null && m_sender.active()) {
                 if (m_sender.stop()) {                                      // Arrêt du Sender
                                                                             // TODO : communiquer avec le display pour indiquer qu'il restait des messages à envoyer
                 }

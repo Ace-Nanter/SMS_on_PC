@@ -9,12 +9,12 @@ using LibUsbDotNet.Main;
 namespace UsbLayer {
     class Receiver {
 
-        private static readonly ReadEndpointID readEndpoint = ReadEndpointID.Ep04;  // 0x84 ==> 132 en décimal ==> Correspond à l'endpoint 4 dans l'enum (qui démarre à 129)
+        private static readonly ReadEndpointID readEndpoint = ReadEndpointID.Ep01;  // 0x81 ==> 129 en décimal ==> Correspond à l'endpoint 1 dans l'enum (qui démarre à 129)
         private readonly int timeout = int.Parse(Properties.Resources.timeout);     // timeout : 100ms
-        private UsbEndpointReader m_reader = null;                                  // Endpoint de lecture
 
+        private UsbEndpointReader m_reader = null;                                  // Endpoint de lecture
+        private Queue<string> m_Received;                                           // FIFO des messages reçus
         private Thread m_readThread = null;
-        private EndpointDataEventArgs m_args = null;                                // Permet d'avoir accès aux arguments globalement
         private bool m_stop = false;                                                // Définit l'arrêt/marche de la lecture
         private UsbManager m_manager;                                               // Référence au manager global
 
@@ -23,25 +23,23 @@ namespace UsbLayer {
             m_reader = manager.getDevice().OpenEndpointReader(readEndpoint);        // On ouvre le canal de lecture
             m_reader.Flush();
 
-            m_reader.DataReceived += (createThread);                                // Activation de l'event de lecture
-            m_reader.DataReceivedEnabled = true;
+            m_Received = new Queue<string>();
+
+            m_readThread = new Thread(initRead);
+            m_readThread.Start();
         }
 
         public bool active() {
             return (!m_stop);
         }
 
-        private void createThread(object sender, EndpointDataEventArgs e) {
 
-            // Get the arguments
-            m_args = e;
-            
-            // Start the thread
-            m_readThread = new Thread(this.doRead);
-            m_readThread.Start();
+        private void initRead() {
+            m_reader.DataReceived += (doRead);                                      // Activation de l'event de lecture dans le thread
+            m_reader.DataReceivedEnabled = true;
         }
 
-        private void doRead() {
+        private void doRead(object sender, EndpointDataEventArgs args) {
             ErrorCode ec = ErrorCode.None;
             
             int length = 0;
@@ -49,15 +47,10 @@ namespace UsbLayer {
             byte[] buffer;
             string msg = "";
             string tmp = "";
-            
+
             try {
-
-                // Desactivate the event reading
-                m_reader.DataReceived -= (createThread);
-                m_reader.DataReceivedEnabled = false;
-
                 #region Get the length
-                tmp = Encoding.UTF8.GetString(m_args.Buffer, 0, m_args.Count);
+                tmp = Encoding.UTF8.GetString(args.Buffer, 0, args.Count);
                 if (string.IsNullOrEmpty(tmp))                                      // Is it exploitable ?
                     throw new Exception("Anormal data received !");
 
@@ -71,20 +64,22 @@ namespace UsbLayer {
                 checkErrors(ec, received, buffer.Length);
                 msg = Encoding.UTF8.GetString(buffer);
                 if (!string.IsNullOrEmpty(msg)) {                                   // Is the message exploitable ?
-                                                                            // TODO : event, interface ?
-                    Console.WriteLine(">>> {0}", msg);                   // TODO : to delete
+                    m_Received.Enqueue(msg);                                        // Enqueue the message        
+                    Console.WriteLine(">>> {0}", msg);                              // TODO : to delete
                 }
                 #endregion
             }
             catch (Exception e) {
                 Console.WriteLine("An exception occurred : " + e);
-                stop();
-                // TODO : traitement pour récupérer l'erreur ?
             }
+        }
 
-            // Reactivate the event
-            m_reader.DataReceived += (createThread);
-            m_reader.DataReceivedEnabled = true;
+        /// <summary>
+        /// Return the last string read from the stream or null if the queue is empty
+        /// </summary>
+        /// <returns>The last string read or null if the queue is empty</returns>
+        public string getLast() {
+            return (m_Received.Count > 0) ? m_Received.Dequeue() : null;
         }
 
         /// <summary>
@@ -115,10 +110,14 @@ namespace UsbLayer {
 
             Console.WriteLine("Désactivation du receiver...");
             // Desactivate the event reading
-            m_reader.DataReceived -= (createThread);
+            m_reader.DataReceived -= (doRead);
             m_reader.DataReceivedEnabled = false;
+
             m_stop = true;                                  // Arrêt du thread
-            //m_readThread.Abort();
+
+            if(m_readThread.IsAlive) {
+                m_readThread.Abort();
+            }
             m_reader.Abort();                               // Stop reading
             m_reader.Dispose();                             // On libère les ressources de lecture
         }
