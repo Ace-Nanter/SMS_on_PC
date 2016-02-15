@@ -10,6 +10,7 @@ namespace UsbLayer {
     class Receiver {
 
         private static readonly ReadEndpointID readEndpoint = ReadEndpointID.Ep01;  // 0x81 ==> 129 en décimal ==> Correspond à l'endpoint 1 dans l'enum (qui démarre à 129)
+        //private static readonly ReadEndpointID readEndpoint = ReadEndpointID.Ep04;    // 0x84 ==> 132 en décimal ==> Correspond à l'endpoint 1 dans l'enum (qui démarre à 132)
         private readonly int timeout = int.Parse(Properties.Resources.timeout);     // timeout : 100ms
 
         private UsbEndpointReader m_reader = null;                                  // Endpoint de lecture

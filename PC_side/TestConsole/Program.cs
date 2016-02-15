@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,20 +17,35 @@ namespace TestConsole {
             Console.ReadLine();
             try {
                 if (manager.connect()) {
-                    string msg = "";
+                    /*string msg = "";
                     Console.WriteLine("Connexion OK");
 
-                    while(!string.Equals("STOP", msg)) {
+                    while(true) {
                         Console.WriteLine("Entrez le message à envoyer :");
                         msg = Console.ReadLine();
-                        manager.send(msg);
-                        Console.WriteLine("Envoi du message : {0}", msg);
-                        Thread.Sleep(100);
+                        if (!string.Equals("STOP", msg)) {
+                            manager.send(msg);
+                            Console.WriteLine("Envoi du message : {0}", msg);
+                            Thread.Sleep(100);
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    manager.stop();
+                    manager.stop();*/
+
+                    Console.WriteLine("Envoi du message ?");
+                    Console.ReadLine();                                 // Petite pause
+
+                    Contact c = new Contact("Adrien", "0647657049");
+                    string msg = Console.ReadLine();
+                    if(!string.IsNullOrEmpty(msg)) {
+                        SMS sms = new SMS(msg, c);
+                        sms.send(manager);
+                    }
                 }
                 else {
-                    throw new Exception("Erreur lors de la connexion !");
+                    Console.WriteLine("Aucun téléphone connecté !");
                 }
             }
             catch (Exception e) {

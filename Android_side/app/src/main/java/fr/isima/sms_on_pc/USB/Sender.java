@@ -44,18 +44,19 @@ public class Sender {
         @Override
         public void run() {
             int tryLeft = 5;
-            String previous, msg;
+            String msg;
             String length;
             byte[] sizeBuffer;
             byte[] buffer;
 
-            previous = "";
             while (!m_stop) {
                 if (!m_toSend.isEmpty()) {
                     msg = m_toSend.peek();                                              // Récupération de la chaîne à envoyer
                     if(msg != null && (!msg.isEmpty())) {
                         tryLeft = 5;
-                        while(msg.equals(m_toSend.peek()) && (!m_toSend.isEmpty()) && tryLeft > 0) {
+
+                        // Tant qu'on a pas réussi à envoyer
+                        while((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()) && tryLeft > 0) {
                             try {
                                 length = "" + (msg.getBytes()).length;                  // Récupération du nombre d'octets
                                 sizeBuffer = length.getBytes();                         // Transcription en binaire
@@ -68,12 +69,10 @@ public class Sender {
                             }
                             catch (Exception e) {
                                 Log.d(Sender.class.getSimpleName(), "An exception occured : " + e);
-                                m_stop = true;
                             }
 
                             // Si on envoie un ACK on attend pas la confirmation
                             if(msg.equals("ACK")) {
-                                Log.d("Test", "Coucou !");                              // TODO : to remove
                                 pop();
                                 break;
                             }
@@ -88,13 +87,13 @@ public class Sender {
                             tryLeft--;
                         }
 
-                        if(msg.equals(m_toSend.peek()))                                 // Echec
+                        if((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()))                                 // Echec
                             Log.d(Sender.class.getSimpleName(), "Fail to send : " + msg);
                             pop();
                     }   // End while
 
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(500);
                     }
                     catch(Exception e) {
                         Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);

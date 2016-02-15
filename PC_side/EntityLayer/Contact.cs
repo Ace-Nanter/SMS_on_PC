@@ -5,9 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EntityLayer {
-    class Contact {
+    public class Contact {
         private string m_nom;
         private string m_num;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="nom">Name of the contact</param>
+        /// <param name="num">Phone number of the contact</param>
+        public Contact(string nom, string num) {
+            m_nom = nom;
+            m_num = num;
+        }
 
         public string Nom
         {

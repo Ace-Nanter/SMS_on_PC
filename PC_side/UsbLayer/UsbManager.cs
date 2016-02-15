@@ -40,6 +40,17 @@ namespace UsbLayer {
             #endregion
         }
 
+        public static int USBLimit {
+            get
+            {
+                int value;
+                if (!int.TryParse(Properties.Resources.maxBuffer, out value))
+                    value = 16384;
+
+                return value;
+            }
+        }
+
         public UsbDevice getDevice() {
             return m_device;
         }

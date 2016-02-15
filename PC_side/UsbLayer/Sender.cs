@@ -13,6 +13,7 @@ namespace UsbLayer {
 
         // Constantes
         private readonly WriteEndpointID writeEndpoint = WriteEndpointID.Ep02;      // 0x02 ==> 2 en décimal ==> Endpoint 2
+        //private readonly WriteEndpointID writeEndpoint = WriteEndpointID.Ep05;      // 0x05 ==> 5 en décimal ==> Endpoint 5
         private readonly int timeout = int.Parse(Properties.Resources.timeout);     // timeout : 100ms
 
         private UsbEndpointWriter m_writer = null;                                  // Endpoint d'écriture
@@ -110,7 +111,8 @@ namespace UsbLayer {
         /// Supprime l'élément de la pile du dessus
         /// </summary>
         public void pop() {
-            m_toSend.Dequeue();
+            if(m_toSend.Count > 0)
+                m_toSend.Dequeue();
         }
 
         /// <summary>

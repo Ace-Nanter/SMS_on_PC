@@ -12,26 +12,34 @@ namespace EntityLayer
     /// </summary>
     public class SMS
     {
-        public static int id_setter = 0;
+        public static int id_setter = 1;
 
         private static readonly int PAGE_SIZE = 140;
 
         private int m_id;                           // ID of the message
         private string m_body;                      // Body of the message
-        private int m_nbPages;                      // Number of pages contained in the SMS
         private DateTime m_date;                    // Date it was sent/received
         private Contact m_contact;                  // Contact associated to the message
         private bool m_received;                    // True if the message was received, wrong if it was sent
         private bool m_notified;                    // Was the message received ?
 
         public SMS() {
-
+            m_id = id_setter++;
+            m_date = DateTime.Now;
         }
 
-        
-        /*public SMS(m_body, m_date, m_received) {
+        /*
+        public SMS(m_body, m_date, m_received) {
 
-        }*/
+        }
+        */
+
+        public SMS(string body, Contact contact) : this() {
+            m_received = false;
+            m_notified = false;
+            m_body = body;
+            m_contact = Contact;
+        }
 
         public string Body
         {
@@ -43,15 +51,6 @@ namespace EntityLayer
             set
             {
                 m_body = value;
-                m_nbPages = m_body.Length / PAGE_SIZE;
-            }
-        }
-
-        public int NbPages
-        {
-            get
-            {
-                return m_nbPages;
             }
         }
 
@@ -86,16 +85,24 @@ namespace EntityLayer
         /// </summary>
         /// <returns></returns>
         public bool send(UsbManager manager) {
-
+            int limit = UsbManager.USBLimit;
             string buffer = "";
 
-            buffer = "SMSHEADER:" + Contact.Num + ":" + NbPages;
+            int NbComs = (Body.Length + limit - 1) / limit;
 
-            for(int i = 0; i < NbPages; i++) {
-                buffer = "SMSBODY:" + i + ":";
-                buffer += Body.Substring(i * PAGE_SIZE, PAGE_SIZE);
+            buffer = "SMSHEADER:" + Contact.Num + ":" + NbComs;
+
+            for(int i = 0; i < NbComs; i++) {
+                buffer = "SMSBODY:" + (i+1) + ":";
+                buffer += Body.Substring(i * limit, (i+1) * limit - 1);
+
+                // TODO : to remove
+                Console.WriteLine("Envoi de {0}", buffer);
+
                 manager.send(buffer);
             }
+
+            m_date = DateTime.Now;                  // The message is sent now
 
             return true;
         }

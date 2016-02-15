@@ -28,11 +28,11 @@ namespace UsbLayer {
             while (!m_stop) {
                 toHandle = m_manager.getLastReceived();
                 if (!string.IsNullOrEmpty(toHandle)) {
-                    //m_manager.send("ACK");                                  // Acquittal
-
                     if(toHandle.StartsWith("ACK")) {
-                        Console.WriteLine("Je déqueue !");
                         m_manager.popSending();
+                    }
+                    else {
+                        m_manager.send("ACK");                              // Acquittal
                     }
                     /*
                     if (toHandle.startsWith("SMSHEADER")) {                 // SMS Header

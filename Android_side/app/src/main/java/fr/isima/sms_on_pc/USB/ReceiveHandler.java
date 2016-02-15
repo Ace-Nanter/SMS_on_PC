@@ -2,6 +2,8 @@ package fr.isima.sms_on_pc.USB;
 
 import android.util.Log;
 
+import java.util.IllegalFormatException;
+
 import fr.isima.sms_on_pc.SMS.SMS;
 
 /**
@@ -20,51 +22,59 @@ public class ReceiveHandler {
         m_handle = new Thread(new Runnable() {
             @Override
             public void run() {
+                int toComplete = 0;
+                int nbComs = 0;
+                SMS sms = null;
                 String toHandle;
 
                 while(!m_stop) {
                     toHandle = m_link.getLastReceived();
                     if(toHandle != null && !toHandle.isEmpty()) {
-                        m_link.send("ACK");                                 // Acquittal
-                        if(toHandle.startsWith("SMSHEADER")) {              // SMS Header
-                            String args[] = toHandle.split(":");
-                            if(checkHeader(args)) {
-                                SMS sms = new SMS(Integer.parseInt(args[1]), args[2]);
-                                for(int i = 0 ; i < Integer.parseInt(args[3]) ; i++) {
-                                    toHandle = m_link.getLastReceived();
-
-                                    // Wait for the stream
-                                    while(toHandle == null) {
-                                        toHandle = m_link.getLastReceived();
-                                        try {
-                                            Thread.sleep(500);
-                                        }
-                                        catch (InterruptedException e) {
-                                            Log.d(ReceiveHandler.class.getSimpleName(),
-                                                    "Error during a sleep !");
-                                        }
-                                    }
-
-                                    // Concatenation
-                                    if(toHandle.startsWith("SMSBODY")) {
-                                        toHandle = toHandle.substring(8);
-                                        sms.appendBody(toHandle);
-                                    }
-                                }
-                                sms.send();                                 // Send the message
-                            }
-                        }
-                        else if(toHandle.startsWith("SMSBODY")) {           // SMS Body
-                            Log.d(ReceiveHandler.class.getSimpleName(),
-                                    "Error : SMS body without header !");
-                        }
-                        else if(toHandle.startsWith("CONTACT")) {
-                            // TODO : to implement
-                        }
-                        else if(toHandle.startsWith("ACK")) {               // Acquittal received
-                            Log.d("Debug", "Yolo y a un ACK je déqueue");
+                        if(toHandle.startsWith("ACK")) {
                             m_link.popSentList();
                         }
+                        else {                                                  // Not a ACK
+                            try {
+                                if (toHandle.startsWith("SMSHEADER")) {         // SMS Header
+                                    String args[] = toHandle.split(":");        // Get args
+                                    if (checkHeader(args)) {                    // Check
+                                        sms = new SMS(Integer.parseInt(args[1]), args[2]);
+                                        nbComs = Integer.parseInt(args[3]);
+                                        toComplete = 1;
+                                    }
+                                    else {                                      // If problem
+                                        throw new Exception("Incorrect Header !");
+                                    }
+                                } else if (toHandle.startsWith("SMSBODY")) {    // SMS Body
+                                    // Concatenation
+                                    toHandle = toHandle.substring(8);
+                                    int i = Integer.parseInt(toHandle.split(":")[0]);
+                                    toHandle = toHandle.substring(2);
+
+                                    // Get a part
+                                    if (i == toComplete && nbComs > 0) {
+                                        sms.appendBody(toHandle);
+                                        nbComs--;   toComplete++;
+                                    }
+                                    else if(nbComs > 0 && i != toComplete) {
+                                        throw new Exception("Body unexpected !");
+                                    }
+
+                                    // If it's over, send the message
+                                    if(toComplete == 0) {
+                                        sms.send();
+                                    }
+                                } else if (toHandle.startsWith("CONTACT")) {
+                                    // TODO : to implement
+                                }
+                                // If no Exception, send the ACK
+                                m_link.send("ACK");                             // Acquittal
+                            }
+                            catch (Exception e) {
+                                Log.d(ReceiveHandler.class.getSimpleName(), "An exception occured :" + e);
+                            }
+                        }
+
                     }
                     try {
                         Thread.sleep(500);                                  // For scheduling
