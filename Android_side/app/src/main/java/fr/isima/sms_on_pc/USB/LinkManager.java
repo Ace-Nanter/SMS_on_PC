@@ -187,9 +187,9 @@ public class LinkManager {
         }
 
         if (m_device != null) {
-            try {
+        /*    try {
                 m_device.close();
-            } catch (IOException e) { }
+            } catch (IOException e) { }*/
             m_device = null;
         }
 

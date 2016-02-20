@@ -94,7 +94,7 @@ namespace UsbLayer {
                                 break;
                             }
 
-                            Thread.Sleep(500);
+                            Thread.Sleep(600);
                             tryLeft--;
                         }
 
@@ -104,6 +104,7 @@ namespace UsbLayer {
                         }
                     }
                 }
+                Thread.Sleep(100);
             }
         }
 

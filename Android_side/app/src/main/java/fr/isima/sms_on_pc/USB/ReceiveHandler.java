@@ -2,7 +2,6 @@ package fr.isima.sms_on_pc.USB;
 
 import android.util.Log;
 
-import java.util.IllegalFormatException;
 
 import fr.isima.sms_on_pc.SMS.SMS;
 
@@ -22,7 +21,7 @@ public class ReceiveHandler {
         m_handle = new Thread(new Runnable() {
             @Override
             public void run() {
-                int toComplete = 0;
+                int index = 0;
                 int nbComs = 0;
                 SMS sms = null;
                 String toHandle;
@@ -34,50 +33,63 @@ public class ReceiveHandler {
                             m_link.popSentList();
                         }
                         else {                                                  // Not a ACK
+                            m_link.send("ACK");                                 // Acquittal
                             try {
                                 if (toHandle.startsWith("SMSHEADER")) {         // SMS Header
                                     String args[] = toHandle.split(":");        // Get args
+
                                     if (checkHeader(args)) {                    // Check
                                         sms = new SMS(Integer.parseInt(args[1]), args[2]);
                                         nbComs = Integer.parseInt(args[3]);
-                                        toComplete = 1;
+                                        index = 1;
                                     }
                                     else {                                      // If problem
                                         throw new Exception("Incorrect Header !");
                                     }
                                 } else if (toHandle.startsWith("SMSBODY")) {    // SMS Body
-                                    // Concatenation
-                                    toHandle = toHandle.substring(8);
-                                    int i = Integer.parseInt(toHandle.split(":")[0]);
-                                    toHandle = toHandle.substring(2);
+                                    if(index != 0 && nbComs != 0) {
 
-                                    // Get a part
-                                    if (i == toComplete && nbComs > 0) {
-                                        sms.appendBody(toHandle);
-                                        nbComs--;   toComplete++;
+                                        toHandle = toHandle.substring(8);       // Delete "SMSBODY:"
+
+                                        // Get the number of the part of the message
+                                        int i = Integer.parseInt(toHandle.split(":")[0]);
+                                        toHandle = toHandle.substring(2);       // Delete number
+
+                                        // Get a part
+                                        if (i == index && index <= nbComs) {
+                                            sms.appendBody(toHandle);
+                                        } else if (nbComs > 0 && i != index) {
+                                            throw new Exception("Incorrect part of the message received !");
+                                        }
+
+                                        // Is the message complete ?
+                                        if(index == nbComs) {                   // Yes
+                                            sms.send();
+                                            nbComs = 0;
+                                            index = 0;
+                                        }
+                                        else {                                  // No
+                                            index++;
+                                        }
                                     }
-                                    else if(nbComs > 0 && i != toComplete) {
+                                    else {
                                         throw new Exception("Body unexpected !");
-                                    }
-
-                                    // If it's over, send the message
-                                    if(toComplete == 0) {
-                                        sms.send();
                                     }
                                 } else if (toHandle.startsWith("CONTACT")) {
                                     // TODO : to implement
                                 }
                                 // If no Exception, send the ACK
-                                m_link.send("ACK");                             // Acquittal
+
                             }
                             catch (Exception e) {
+                                e.printStackTrace();
                                 Log.d(ReceiveHandler.class.getSimpleName(), "An exception occured :" + e);
                             }
                         }
 
                     }
                     try {
-                        Thread.sleep(500);                                  // For scheduling
+                        Thread.sleep(100);                                  // For scheduling
                     }
                     catch(InterruptedException e) {
                         Log.d(ReceiveHandler.class.getSimpleName(), "Error during a sleep !");

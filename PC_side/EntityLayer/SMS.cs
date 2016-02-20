@@ -38,7 +38,7 @@ namespace EntityLayer
             m_received = false;
             m_notified = false;
             m_body = body;
-            m_contact = Contact;
+            m_contact = contact;
         }
 
         public string Body
@@ -74,7 +74,7 @@ namespace EntityLayer
             set { m_notified = value; }
         }
 
-        internal Contact Contact
+        public Contact Contact
         {
             get { return m_contact; }
             set { m_contact = value; }
@@ -85,21 +85,37 @@ namespace EntityLayer
         /// </summary>
         /// <returns></returns>
         public bool send(UsbManager manager) {
-            int limit = UsbManager.USBLimit;
+
+            int NbComs;
+            int limit = 80;
             string buffer = "";
 
-            int NbComs = (Body.Length + limit - 1) / limit;
+            if(string.IsNullOrEmpty(Body)) {
+                throw new Exception("Empty Message Body !");
+            }
 
-            buffer = "SMSHEADER:" + Contact.Num + ":" + NbComs;
-
-            for(int i = 0; i < NbComs; i++) {
-                buffer = "SMSBODY:" + (i+1) + ":";
-                buffer += Body.Substring(i * limit, (i+1) * limit - 1);
-
-                // TODO : to remove
-                Console.WriteLine("Envoi de {0}", buffer);
-
+            if(Body.Length < 80) {
+                manager.send("SMSHEADER:" + m_id + ":" + Contact.Num + ":1");
+                buffer = "SMSBODY:" + "1:";
+                buffer += Body;
                 manager.send(buffer);
+            }
+            else {
+                NbComs = (Body.Length + limit - 1) / limit;
+                buffer = "SMSHEADER:" + m_id + ":" + Contact.Num + ":" + NbComs;
+                manager.send(buffer);
+
+                int Com = 1;
+                for (int i = 0; i < Body.Length; i+= limit) {
+                    buffer = "SMSBODY:" + Com  + ":";
+                    buffer += Body.Substring(i, Math.Min(limit, Body.Length - i));
+                    Com++;
+
+                    // TODO : to remove
+                    Console.WriteLine("Envoi de {0}", buffer);
+
+                    manager.send(buffer);
+                }
             }
 
             m_date = DateTime.Now;                  // The message is sent now

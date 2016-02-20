@@ -93,7 +93,7 @@ public class Sender {
                     }   // End while
 
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(100);
                     }
                     catch(Exception e) {
                         Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);

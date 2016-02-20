@@ -17,31 +17,16 @@ namespace TestConsole {
             Console.ReadLine();
             try {
                 if (manager.connect()) {
-                    /*string msg = "";
-                    Console.WriteLine("Connexion OK");
-
                     while(true) {
-                        Console.WriteLine("Entrez le message à envoyer :");
-                        msg = Console.ReadLine();
-                        if (!string.Equals("STOP", msg)) {
-                            manager.send(msg);
-                            Console.WriteLine("Envoi du message : {0}", msg);
-                            Thread.Sleep(100);
-                        }
-                        else {
-                            break;
-                        }
-                    }
-                    manager.stop();*/
+                        Console.WriteLine("Ecrivez votre message :");
+                        string msg = Console.ReadLine();
 
-                    Console.WriteLine("Envoi du message ?");
-                    Console.ReadLine();                                 // Petite pause
-
-                    Contact c = new Contact("Adrien", "0647657049");
-                    string msg = Console.ReadLine();
-                    if(!string.IsNullOrEmpty(msg)) {
-                        SMS sms = new SMS(msg, c);
-                        sms.send(manager);
+                        Contact c = new Contact("Adrien", "0647657049");
+                        if (!string.IsNullOrEmpty(msg)) {
+                            SMS sms = new SMS(msg, c);
+                            sms.send(manager);
+                        }
+                        Console.WriteLine("Message envoyé !");
                     }
                 }
                 else {
@@ -52,18 +37,6 @@ namespace TestConsole {
                 Console.WriteLine("Exception occured : {0}", e);
             }
         }
-        /*
-        void USBInterface.hasBeenConnected() {
-            throw new NotImplementedException();
-        }
-
-        void USBInterface.hasBeenStopped() {
-            throw new NotImplementedException();
-        }
-
-        void USBInterface.hasRead(string msg) {
-            throw new NotImplementedException();
-        }*/
     }
 
     

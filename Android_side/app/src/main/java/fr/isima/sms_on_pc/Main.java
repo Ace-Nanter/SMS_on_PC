@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
+import fr.isima.sms_on_pc.SMS.SMS;
 import fr.isima.sms_on_pc.USB.LinkManager;
 import fr.isima.sms_on_pc.USB.UsbInterface;
 
@@ -50,6 +51,7 @@ public class Main extends AppCompatActivity implements UsbInterface {
             // Launch the connexion
             try {
                 link = new LinkManager(this, this);
+                SMS.init(this);
             } catch (Exception e) {
                 console.append(e.getMessage());
                 Log.d(Main.class.getSimpleName(), "An exception occurred : " + e);
