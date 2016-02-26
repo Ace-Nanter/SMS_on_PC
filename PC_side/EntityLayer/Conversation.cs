@@ -14,7 +14,26 @@ namespace EntityLayer
 
         public Conversation()
         {
+            receiver = null;
+            messages = new List<SMS>();
+        }
 
+        public Conversation(Contact c)
+        {
+            receiver = c;
+            messages = new List<SMS>();
+        }
+
+        public Contact Receiver
+        {
+            get{ return receiver; }
+            set{ receiver = value; }
+        }
+
+        public List<SMS> Messages
+        {
+            get { return messages; }
+            set { messages = value; }
         }
     }
 }
