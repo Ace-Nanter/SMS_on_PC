@@ -12,6 +12,6 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="receiverName" Grid.Row="0" Text="{Binding ReceiverName}" Foreground="White" FontWeight="Bold"/>
-        <TextBlock x:Name="LastMsg" Grid.Row="1" Text="{Binding MessagePreview}" />
+        <TextBlock x:Name="LastMsg" Grid.Row="1" Text="{Binding MessagePreview}" Foreground="Gray" />
     </Grid>
 </UserControl>
