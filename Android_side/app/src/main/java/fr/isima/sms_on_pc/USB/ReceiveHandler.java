@@ -89,7 +89,7 @@ public class ReceiveHandler {
 
                     }
                     try {
-                        Thread.sleep(100);                                  // For scheduling
+                        Thread.sleep(50);                                  // For scheduling
                     }
                     catch(InterruptedException e) {
                         Log.d(ReceiveHandler.class.getSimpleName(), "Error during a sleep !");

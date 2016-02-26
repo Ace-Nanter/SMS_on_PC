@@ -50,7 +50,7 @@ public class Main extends AppCompatActivity implements UsbInterface {
 
             // Launch the connexion
             try {
-                link = new LinkManager(this, this);
+                link = LinkManager.getInstance(this, this);
                 SMS.init(this);
             } catch (Exception e) {
                 console.append(e.getMessage());

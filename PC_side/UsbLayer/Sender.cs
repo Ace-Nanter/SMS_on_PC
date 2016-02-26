@@ -94,7 +94,7 @@ namespace UsbLayer {
                                 break;
                             }
 
-                            Thread.Sleep(600);
+                            Thread.Sleep(600);                                              // Timeout de 600 ms
                             tryLeft--;
                         }
 
@@ -104,7 +104,7 @@ namespace UsbLayer {
                         }
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(100);                                                          // Envoi toutes les 100 ms
             }
         }
 

@@ -86,7 +86,7 @@ namespace EntityLayer
         /// <returns></returns>
         public bool send(UsbManager manager) {
 
-            int NbComs;
+            int nbComs;
             int limit = 80;
             string buffer = "";
 
@@ -96,20 +96,18 @@ namespace EntityLayer
 
             if(Body.Length < 80) {
                 manager.send("SMSHEADER:" + m_id + ":" + Contact.Num + ":1");
-                buffer = "SMSBODY:" + "1:";
-                buffer += Body;
-                manager.send(buffer);
+                manager.send("SMSBODY:1:" + Body);
             }
             else {
-                NbComs = (Body.Length + limit - 1) / limit;
-                buffer = "SMSHEADER:" + m_id + ":" + Contact.Num + ":" + NbComs;
+                nbComs = (Body.Length + limit - 1) / limit;
+                buffer = "SMSHEADER:" + m_id + ":" + Contact.Num + ":" + nbComs;
                 manager.send(buffer);
 
-                int Com = 1;
+                int com = 1;
                 for (int i = 0; i < Body.Length; i+= limit) {
-                    buffer = "SMSBODY:" + Com  + ":";
+                    buffer = "SMSBODY:" + com  + ":";
                     buffer += Body.Substring(i, Math.Min(limit, Body.Length - i));
-                    Com++;
+                    com++;
 
                     // TODO : to remove
                     Console.WriteLine("Envoi de {0}", buffer);

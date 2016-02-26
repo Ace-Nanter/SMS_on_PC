@@ -25,25 +25,22 @@ public class Incoming extends BroadcastReceiver {
         final Bundle bundle = intent.getExtras();
 
         try {
-
             if (bundle != null) {
-
                 final Object[] pdusObj = (Object[]) bundle.get("pdus");
 
                 for (int i = 0; i < pdusObj.length; i++) {
-
                     SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
+
+                    // Get the informations
+                    String body = currentMessage.getDisplayMessageBody();
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
+                    long date = currentMessage.getTimestampMillis();
 
-                    String senderNum = phoneNumber;
-                    String message = currentMessage.getDisplayMessageBody();
-
-                    Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
-
-
-                } // end for loop
-            } // bundle is null
-
+                    // Create a new SMS object
+                    SMS sms = new SMS(phoneNumber, body, date);
+                    sms.sendUSB();
+                }
+            }
         } catch (Exception e) {
             Log.e("SmsReceiver", "Exception smsReceiver" + e);
         }

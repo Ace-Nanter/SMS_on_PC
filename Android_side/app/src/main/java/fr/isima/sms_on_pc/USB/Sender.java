@@ -78,7 +78,7 @@ public class Sender {
                             }
 
                             try {
-                                Thread.sleep(500);                                      // Sleep pour l'ordonnancement et nouvelle tentative
+                                Thread.sleep(600);                                      // Timeout
                             }
                             catch(Exception e) {
                                 Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);
@@ -87,13 +87,13 @@ public class Sender {
                             tryLeft--;
                         }
 
-                        if((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()))                                 // Echec
+                        if((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()))        // Failure
                             Log.d(Sender.class.getSimpleName(), "Fail to send : " + msg);
                             pop();
                     }   // End while
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(100);                                              // Send every 100 ms
                     }
                     catch(Exception e) {
                         Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);

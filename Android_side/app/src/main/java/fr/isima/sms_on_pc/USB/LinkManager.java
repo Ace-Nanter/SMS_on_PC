@@ -13,10 +13,9 @@ import android.content.Context;
 import android.hardware.usb.*;
 import android.util.Log;
 
-import java.io.IOException;
 import java.io.FileDescriptor;
 
-public class LinkManager {
+public final class LinkManager {
     private static final int TENTATIVES_MAX = 5;                // 5 tentatives de connexion
     private static final int CONNECTION_TIMEOUT = 2000;         // Timeout de connexion : 2 secondes
 
@@ -35,7 +34,22 @@ public class LinkManager {
     private Sender m_sender = null;                             // Sender
     private ReceiveHandler m_handler = null;                    // Handler
 
-    public LinkManager(final Context context, final UsbInterface listener) throws Exception {
+    private static volatile LinkManager m_instance = null;      // Instance du LinkManager
+
+    /**
+     * Default constructor - private for singleton pattern - not used
+     */
+    private LinkManager() {
+        super();
+    }
+
+    /**
+     * Constructor used - private for singleton pattern
+     * @param context Context to get USB context
+     * @param listener Listener to fire events
+     * @throws Exception
+     */
+    private LinkManager(final Context context, final UsbInterface listener) throws Exception {
         if (context == null || listener == null) {
             throw new Exception("Problème lors de l'instanciation de la connexion USB !");
         }
@@ -100,6 +114,29 @@ public class LinkManager {
             }
         };
     }
+
+    /**
+     * Get an instance of Link Manager
+     * @param context Context to transmit to the constructor
+     * @param listener Listener to transmit to the listener
+     * @return THE instance of Link Manager
+     * @throws Exception
+     */
+    public final static LinkManager getInstance(final Context context, final UsbInterface listener)
+        throws Exception {
+        if(LinkManager.m_instance == null) {
+            synchronized (LinkManager.class) {
+                if(LinkManager.m_instance == null) {
+                    LinkManager.m_instance = new LinkManager(context, listener);
+                }
+            }
+        }
+
+        return LinkManager.m_instance;
+    }
+
+
+
 
     /**
      * Get the descriptors of the connected devices
