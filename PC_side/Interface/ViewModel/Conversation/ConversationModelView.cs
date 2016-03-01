@@ -32,6 +32,21 @@ namespace Projet.ViewModel.Conversation
             }
         }
 
+        public String ReceiverName
+        {
+            get
+            {
+                if(!m_conversation.Receiver.Nom.Equals("Inconnu"))
+                {
+                    return m_conversation.Receiver.Nom + "[" + NbMessage + "]";
+                }
+                else
+                {
+                    return m_conversation.Receiver.Num + "[" + NbMessage + "]";
+                }
+            }
+        }
+
         public int NbMessage
         {
             get { return m_conversation.Messages.Count; }
@@ -39,7 +54,7 @@ namespace Projet.ViewModel.Conversation
 
         public String LastMessage
         {
-            get { return "test" + "[" + NbMessage + "]"; }
+            get { return ((EntityLayer.SMS)Messages.Last()).Body; }
         }
 
         public List<EntityLayer.SMS> Messages

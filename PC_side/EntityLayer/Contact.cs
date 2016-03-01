@@ -19,6 +19,12 @@ namespace EntityLayer {
             m_num = num;
         }
 
+        public Contact(string num)
+        {
+            m_nom = "Inconnu";
+            m_num = num;
+        }
+
         public string Nom
         {
             get
