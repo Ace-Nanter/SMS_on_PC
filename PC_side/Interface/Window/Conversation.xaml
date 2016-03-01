@@ -26,8 +26,24 @@
                 <UserControls:CloseButton HorizontalAlignment="Right" Margin="5" />
             </Grid>
             <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="1" Margin="10" BorderBrush="{StaticResource ApplicationBorderColor}">
-                <ScrollViewer BorderBrush="{StaticResource ApplicationBorderColor}">
-                    <TextBlock Text="//Info: Ici résidera les users controls de conv"/>
+                <ScrollViewer  BorderBrush="{StaticResource ApplicationBorderColor}">
+                    <ListBox x:Name="FilConv" Background="Transparent" ItemsSource="{Binding SMSs}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Focusable" Value="False"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Heure}" Foreground="White" />
+                                    <TextBlock Text="{Binding Contact}" Foreground="Green"/>
+                                    <TextBlock Text=": " />
+                                    <TextBlock Text="{Binding Message}" Foreground="White" />
+                                </StackPanel>                               
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>                    
                 </ScrollViewer>
             </Border>    
             <TextBox Grid.Row="2" Grid.Column="0" Margin="5,5,5,5" Background="{StaticResource ApplicationBackgroundColor}"/>

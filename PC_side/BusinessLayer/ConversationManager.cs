@@ -16,9 +16,14 @@ namespace BusinessLayer
         {
             return bdd.getConversations();
         }
+
+        public Conversation getConversationsFromContact(String contact)
+        {
+            return bdd.getConversationsFromContact(contact);
+        }
         #endregion
 
-        #region Contact management
+            #region Contact management
         public List<Contact> getContacts()
         {
             return bdd.getContacts();

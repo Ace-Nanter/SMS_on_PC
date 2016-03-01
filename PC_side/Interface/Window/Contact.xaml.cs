@@ -34,10 +34,9 @@ namespace Projet
         private void ContactWindow_Loaded(object sender, RoutedEventArgs e)
         {
             BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
-
-            // Gestion des Tournois
+            
             IList<EntityLayer.Contact> contacts = cm.getContacts();
-            ViewModel.Contact.ContactsModelView cmv = new ViewModel.Contact.ContactsModelView(contacts);
+            ViewModel.Contact.ConversationsModelView cmv = new ViewModel.Contact.ConversationsModelView(contacts);
             ListContact.DataContext = cmv;
         }
     }

@@ -73,19 +73,9 @@
     <Compile Include="UserControls\AppButton.xaml.cs">
       <DependentUpon>AppButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\BulleConvReceiver.xaml.cs">
-      <DependentUpon>BulleConvReceiver.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\BulleConvSender.xaml.cs">
-      <DependentUpon>BulleConvSender.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\CloseButton.xaml.cs">
       <DependentUpon>CloseButton.xaml</DependentUpon>
     </Compile>
-    <Page Include="UserControls\Conversation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Window\Contact.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -102,14 +92,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserControls\Conversation.xaml.cs">
-      <DependentUpon>Conversation.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModel\Contact\ContactModelView.cs" />
     <Compile Include="ViewModel\Contact\ContactsModelView.cs" />
     <Compile Include="ViewModel\Conversation\ConversationModelView.cs" />
     <Compile Include="ViewModel\Conversation\ConversationsModelView.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\SMS\SMSModelView.cs" />
+    <Compile Include="ViewModel\SMS\SMSsModelView.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="Window\Contact.xaml.cs">
       <DependentUpon>Contact.xaml</DependentUpon>
@@ -122,14 +111,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\AppButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\BulleConvReceiver.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\BulleConvSender.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

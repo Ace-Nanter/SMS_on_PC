@@ -33,8 +33,8 @@ namespace DataAccessLayer
                 conv1.Messages = msgc1;
 
                 List<SMS> msgc2 = new List<SMS>();
-                msgc1.Add(new SMS("Yop", conv2.Receiver));
-                msgc1.Add(new SMS("Salut !", null));
+                msgc2.Add(new SMS("Yop", conv2.Receiver));
+                msgc2.Add(new SMS("Salut !", null));
             
                 conv2.Messages = msgc2;
 
@@ -42,6 +42,17 @@ namespace DataAccessLayer
                 conversation.Add(conv2);
             }
             return conversation;
+        }
+
+        public Conversation getConversationsFromContact(String contact)
+        {
+            foreach(Conversation c in conversation)
+            {
+                if (c.Receiver.Num.Equals(contact))
+                    return c;
+            }
+
+            return null;
         }
 
         public List<Contact> getContacts()

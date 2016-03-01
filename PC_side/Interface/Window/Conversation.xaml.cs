@@ -19,10 +19,17 @@ namespace Projet
     /// </summary>
     public partial class Conversation : Window
     {
-        public Conversation()
+        public Conversation(String contact)
         {
             InitializeComponent();
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+
+            EntityLayer.Conversation convs = cm.getConversationsFromContact(contact);
+            ViewModel.SMS.SMSsModelView cmv = new ViewModel.SMS.SMSsModelView(convs.Messages);
+            FilConv.DataContext = cmv;
         }
+
+
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {

@@ -32,6 +32,16 @@ namespace Projet.ViewModel.Conversation
             }
         }
 
+        public int NbMessage
+        {
+            get { return m_conversation.Messages.Count; }
+        }
+
+        public String LastMessage
+        {
+            get { return "test" + "[" + NbMessage + "]"; }
+        }
+
         public List<EntityLayer.SMS> Messages
         {
             get { return m_conversation.Messages; }

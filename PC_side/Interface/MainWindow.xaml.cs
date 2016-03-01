@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projet.ViewModel.Conversation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,13 +61,30 @@ namespace Projet
             ct = new Contact();
             ct.Show();
 
-            Conversation cv = new Conversation();
-            cv.Show();
+           
         }
 
         private void expander_Collapsed(object sender, RoutedEventArgs e)
         {
             ct.Close();
+        }
+
+        private void AppWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            
+            IList<EntityLayer.Conversation> convs = cm.getConversations();
+            ViewModel.Conversation.ConversationsModelView cmv = new ViewModel.Conversation.ConversationsModelView(convs);
+            ListConversations.DataContext = cmv;
+        }
+
+        private void ListConversations_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (ListConversations.SelectedItem != null)
+            {
+                Conversation cv = new Conversation(((ConversationModelView)ListConversations.SelectedItem).Receiver.Num);
+                cv.Show();
+            }
         }
     }
 }
