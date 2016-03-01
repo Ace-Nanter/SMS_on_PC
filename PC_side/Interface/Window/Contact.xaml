@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="Contact" Height="500" Width="300" Foreground="{StaticResource ApplicationTextColor}" Background="{StaticResource ApplicationBackgroundColor}" 
         WindowStyle="None" ResizeMode="NoResize"
+        Loaded="ContactWindow_Loaded"
         WindowStartupLocation="Manual" Top="0">
     <Border x:Name="layoutRoot" BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="1">
         <Grid>
@@ -23,8 +24,24 @@
                     BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="0,0,0,1" MouseDown="Border_MouseDown">
                 <TextBlock Text="Contact" HorizontalAlignment="Left" FontSize="18" Margin="5" Foreground="{StaticResource ApplicationTextColor}"/>
             </Border>
-            <ListBox Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
-                
+            <ListBox x:Name="ListContact" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Contacts}" Background="Transparent">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="Gray" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource AnonymousContact}" Grid.Column="0" Grid.RowSpan="2" Margin="5"/>
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Nom}" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Num}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <Border Grid.Row="2" Grid.ColumnSpan="2" Height="25" Width="150" Margin="0,0,0,10" Background="{StaticResource ApplicationButtonColor}" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                 <TextBlock TextWrapping="Wrap" >

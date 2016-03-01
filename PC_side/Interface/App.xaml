@@ -28,5 +28,8 @@
         <SolidColorBrush x:Key="ApplicationBorderColor"  Color="#FF3A3939" />
         <SolidColorBrush x:Key="ApplicationButtonColor"  Color="#FF2C2B2B" />
         <SolidColorBrush x:Key="ApplicationTextColor"  Color="White" />
+
+
+        <BitmapImage x:Key="AnonymousContact" UriSource="./Picture/anonyme.png" />
     </Application.Resources>
 </Application>
