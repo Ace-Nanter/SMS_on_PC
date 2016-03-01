@@ -8,6 +8,8 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import fr.isima.sms_on_pc.USB.LinkManager;
+
 /**
  * Created by Ace Nanter on 09/02/2016.
  */
@@ -36,9 +38,77 @@ public class Incoming extends BroadcastReceiver {
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
                     long date = currentMessage.getTimestampMillis();
 
-                    // Create a new SMS object
-                    SMS sms = new SMS(phoneNumber, body, date);
-                    sms.sendUSB();
+                    int nbComs;
+                    final int limit = 80;
+                    String buffer;
+
+                    // Get the link manager
+                    LinkManager manager;
+
+                    if(body == null || body == "") {
+                        Log.d(SMS.class.getSimpleName(), "Empty message !");
+                    }
+                    else {
+                        // Get the manager
+                        try {
+                            manager = LinkManager.getInstance(null, null);
+                        } catch (Exception e) {
+                            Log.d(SMS.class.getSimpleName(), "An exception occurred : " + e);
+                            manager = null;
+                        }
+
+                        if (manager != null) {          // If manager is OK
+
+                            Log.d(Incoming.class.getSimpleName(), "Récupération de l'instance ok !");
+
+                            // Check if the message is multiparted or not
+                            if (body.length() < 80) {
+
+                                Log.d(Incoming.class.getSimpleName(), "Moins");
+
+                                // Send the header
+                                buffer = "SMSHEADER:" + phoneNumber;
+                                //buffer += ":" + m_date.getTime().toString();
+                                buffer += ":" + 1;
+
+                                Log.d(SMS.class.getSimpleName(), "header : " + buffer);
+
+                                manager.send(buffer);
+
+                                // Send the body
+                                manager.send("SMSBODY:1:" + body);
+
+                            } else {
+
+                                Log.d(Incoming.class.getSimpleName(), "Plus");
+
+                                // Send the header
+                                nbComs = (body.length() + limit - 1) / limit;
+                                buffer = "SMSHEADER:" + phoneNumber + ":";
+                                //buffer += ":" + m_date.getTime().toString();
+                                buffer += ":" + nbComs;
+
+                                Log.d(SMS.class.getSimpleName(), "header : " + buffer);
+
+                                manager.send(buffer);
+
+                                // Send the body
+                                int com = 1;
+                                for (int k = 0; k < body.length(); k += limit) {
+                                    buffer = "SMSBODY:" + com + ":";
+                                    buffer += body.substring(k, k + Math.min(limit, body.length() - k));
+                                    com++;
+
+                                    Log.d(SMS.class.getSimpleName(), "body : " + buffer);
+
+                                    manager.send(buffer);
+                                }
+                            }
+                        } else {
+                            Log.d(SMS.class.getSimpleName(), "Manager problem !");
+                        }
+                    }
+                    //sms.sendUSB();
                 }
             }
         } catch (Exception e) {

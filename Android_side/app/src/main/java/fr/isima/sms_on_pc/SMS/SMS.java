@@ -40,8 +40,8 @@ public class SMS {
         this();
         m_phoneNumber = phone_number;
         m_body = body;
-        m_date = Calendar.getInstance();
-        m_date.setTimeInMillis(date);
+        //m_date = Calendar.getInstance();
+        //m_date.setTimeInMillis(date);
     }
 
     /**
@@ -120,11 +120,12 @@ public class SMS {
         }
 
         if(manager != null) {
+
             // Check if the message is multiparted or not
             if(m_body.length() < 80) {
                 // Send the header
                 buffer = "SMSHEADER:" + m_phoneNumber;
-                buffer += ":" + m_date.getTime().toString();
+                //buffer += ":" + m_date.getTime().toString();
                 buffer += ":" + 1;
 
                 Log.d(SMS.class.getSimpleName(), "header : " + buffer);
@@ -139,7 +140,7 @@ public class SMS {
                 // Send the header
                 nbComs = (m_body.length() + limit - 1) / limit;
                 buffer = "SMSHEADER:" + m_phoneNumber + ":";
-                buffer += ":" + m_date.getTime().toString();
+                //buffer += ":" + m_date.getTime().toString();
                 buffer += ":" + nbComs;
 
                 manager.send(buffer);

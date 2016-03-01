@@ -33,13 +33,13 @@ public class Main extends AppCompatActivity implements UsbInterface {
         if(button != null) {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    System.exit(0);
+                    finish();
                 }
             });
         }
         else {
             Log.d(Main.class.getSimpleName(), "No way to get exit button !");
-            System.exit(0);
+            finish();
         }
 
         // Récupération du champ texte
@@ -61,7 +61,7 @@ public class Main extends AppCompatActivity implements UsbInterface {
         }
         else {
             Log.d(Main.class.getSimpleName(), "No way to get text display !");
-            System.exit(0);
+            finish();
         }
 
         // TODO : a supprimer
@@ -135,6 +135,6 @@ public class Main extends AppCompatActivity implements UsbInterface {
         catch (Exception e) {
             Log.d(Main.class.getSimpleName(), "Erreur lors d'un sleep");
         }
-        System.exit(0);
+        finish();
     }
 }

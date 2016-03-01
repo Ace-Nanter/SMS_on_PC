@@ -52,11 +52,11 @@ public class Sender {
             while (!m_stop) {
                 if (!m_toSend.isEmpty()) {
                     msg = m_toSend.peek();                                              // Récupération de la chaîne à envoyer
-                    if(msg != null && (!msg.isEmpty())) {
+                    if (msg != null && (!msg.isEmpty())) {
                         tryLeft = 5;
 
                         // Tant qu'on a pas réussi à envoyer
-                        while((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()) && tryLeft > 0) {
+                        while ((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()) && tryLeft > 0) {
                             try {
                                 length = "" + (msg.getBytes()).length;                  // Récupération du nombre d'octets
                                 sizeBuffer = length.getBytes();                         // Transcription en binaire
@@ -66,38 +66,37 @@ public class Sender {
 
                                 buffer = msg.getBytes();                                // Mise au format binaire
                                 m_output.write(buffer, 0, buffer.length);               // Envoi
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Log.d(Sender.class.getSimpleName(), "An exception occured : " + e);
                             }
 
                             // Si on envoie un ACK on attend pas la confirmation
-                            if(msg.equals("ACK")) {
+                            if (msg.equals("ACK")) {
                                 pop();
                                 break;
                             }
 
                             try {
                                 Thread.sleep(600);                                      // Timeout
-                            }
-                            catch(Exception e) {
+                            } catch (Exception e) {
                                 Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);
                             }
 
                             tryLeft--;
-                        }
+                        }   // End while
 
-                        if((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek()))        // Failure
+                        if ((!m_toSend.isEmpty()) && msg.equals(m_toSend.peek())) {     // Failure
                             Log.d(Sender.class.getSimpleName(), "Fail to send : " + msg);
                             pop();
-                    }   // End while
+                        }
+                    }   // End if
+                }       // End if
 
-                    try {
-                        Thread.sleep(100);                                              // Send every 100 ms
-                    }
-                    catch(Exception e) {
-                        Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);
-                    }
+                try {
+                    Thread.sleep(100);                                              // Send every 100 ms
+                }
+                catch(Exception e) {
+                    Log.d(Sender.class.getSimpleName(), "Exception occured during a sleep : " + e);
                 }
             }           // End while
         }               // End run
