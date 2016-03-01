@@ -39,7 +39,7 @@ namespace Projet.ViewModel.Conversation
 
         public String LastMessage
         {
-            get { return "test" + "[" + NbMessage + "]"; }
+            get { return ((EntityLayer.SMS)Messages.Last()).Body + "[" + NbMessage + "]"; }
         }
 
         public List<EntityLayer.SMS> Messages
