@@ -12,6 +12,8 @@ namespace DataAccessLayer
 
         private static List<Conversation> conversation;
 
+        private static List<Contact> contacts;
+
         public List<Conversation> getConversations()
         {
             if(conversation == null)
@@ -26,7 +28,7 @@ namespace DataAccessLayer
                 msgc1.Add(new SMS("Salut !", null));
                 msgc1.Add(new SMS("ça va ?", conv1.Receiver));
                 msgc1.Add(new SMS("Pas mal pour un test", null));
-                msgc1.Add(new SMS("Comme tu le vois", null));
+                msgc1.Add(new SMS("Comme tu vois", null));
 
                 conv1.Messages = msgc1;
 
@@ -41,6 +43,18 @@ namespace DataAccessLayer
             }
             return conversation;
         }
+
+        public List<Contact> getContacts()
+        {
+            if (contacts == null)
+            {
+                contacts = new List<Contact>();
+                contacts.Add(new Contact("John", "0607080910"));
+                contacts.Add(new Contact("Jim", "0470315054"));
+            }
+            return contacts;
+        }
+
 
 
     }

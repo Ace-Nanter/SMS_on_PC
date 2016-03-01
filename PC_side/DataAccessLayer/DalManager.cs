@@ -41,5 +41,10 @@ namespace DataAccessLayer
             return bdd.getConversations();
         }
 
+        public List<Contact> getContacts()
+        {
+            return bdd.getContacts();
+        }
+
     }
 }

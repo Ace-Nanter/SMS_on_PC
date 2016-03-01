@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Contact.cs" />
     <Compile Include="Conversation.cs" />
-    <Compile Include="Discussions.cs" />
     <Compile Include="SMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -23,9 +23,9 @@
                     BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="0,0,0,1" MouseDown="Border_MouseDown">
                 <TextBlock Text="Contact" HorizontalAlignment="Left" FontSize="18" Margin="5" Foreground="{StaticResource ApplicationTextColor}"/>
             </Border>
-            <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" BorderBrush="{StaticResource ApplicationBorderColor}">
-                <TextBlock Text="//Info: Ici résidera la liste des contacts"/>
-            </Border>
+            <ListBox Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
+                
+            </ListBox>
             <Border Grid.Row="2" Grid.ColumnSpan="2" Height="25" Width="150" Margin="0,0,0,10" Background="{StaticResource ApplicationButtonColor}" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                 <TextBlock TextWrapping="Wrap" >
                         <Hyperlink x:Name="ButtonAdd" Style="{StaticResource ApplicationHoverButton}" FontSize="12" >+ Ajouter Contact</Hyperlink>

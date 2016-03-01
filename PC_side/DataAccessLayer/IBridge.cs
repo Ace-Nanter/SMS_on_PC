@@ -11,6 +11,7 @@ namespace DataAccessLayer
     public interface IBridge
     {
         List<Conversation> getConversations();
+        List<Contact> getContacts();
         //Conversation getConversationByContact(Contact c); //Peut être superflux ?
     }
 }

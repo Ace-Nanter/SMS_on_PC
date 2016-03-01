@@ -48,9 +48,10 @@
             <Expander x:Name="expander" Grid.Row="2" Grid.Column="0" ExpandDirection="Left" VerticalAlignment="Center" HorizontalAlignment="Left" Expanded="expander_Expanded" Collapsed="expander_Collapsed">
             </Expander>
             <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" Margin="10" BorderBrush="{StaticResource ApplicationBorderColor}">
-                <StackPanel>
+                <ListBox Background="Transparent" HorizontalAlignment="Center" BorderThickness="0">
                     <TextBlock x:Name="ConversationState" Text="0 Conversation(s) en cour" Foreground="Gray" FontSize="12" FontStyle="Italic"/>
-                </StackPanel>              
+                    
+                </ListBox>              
             </Border>
             <Border Grid.Row="3" Grid.ColumnSpan="2" Height="25" Width="100" Margin="0,0,0,10" Background="{StaticResource ApplicationButtonColor}" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                 <TextBlock TextWrapping="Wrap">

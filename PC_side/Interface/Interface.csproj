@@ -105,6 +105,8 @@
     <Compile Include="UserControls\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\Contact\ContactModelView.cs" />
+    <Compile Include="ViewModel\Contact\ContactsModelView.cs" />
     <Compile Include="ViewModel\Conversation\ConversationModelView.cs" />
     <Compile Include="ViewModel\Conversation\ConversationsModelView.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
