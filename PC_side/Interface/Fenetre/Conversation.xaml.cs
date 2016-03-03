@@ -17,7 +17,7 @@ namespace Projet
     /// <summary>
     /// Logique d'interaction pour Conversation.xaml
     /// </summary>
-    public partial class Conversation : Window
+    public partial class Conversation : System.Windows.Window
     {
         public Conversation(String contact)
         {

@@ -27,7 +27,7 @@ namespace Projet.UserControls
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Window.GetWindow(this).Close();
+            System.Windows.Window.GetWindow(this).Close();
         }
     }
 }

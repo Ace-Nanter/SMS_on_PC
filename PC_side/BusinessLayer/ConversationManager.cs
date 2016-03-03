@@ -23,11 +23,22 @@ namespace BusinessLayer
         }
         #endregion
 
-            #region Contact management
+        #region Contact management
         public List<Contact> getContacts()
         {
             return bdd.getContacts();
         }
-        #endregion
+
+        public Contact getContactFromString(String contact)
+        {
+            return bdd.getContactFromString(contact);
+        }
+
+        public void addContact(Contact con)
+        {
+            bdd.addContact(con);
+        }
+
+            #endregion
     }
 }

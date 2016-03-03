@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projet.ViewModel.Contact;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Projet
     /// <summary>
     /// Logique d'interaction pour Contact.xaml
     /// </summary>
-    public partial class Contact : Window
+    public partial class Contact : System.Windows.Window
     {
         public Contact()
         {
@@ -31,13 +32,28 @@ namespace Projet
             this.DragMove();
         }
 
-        private void ContactWindow_Loaded(object sender, RoutedEventArgs e)
+        public void ContactWindow_Loaded(object sender, RoutedEventArgs e)
         {
             BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
             
             IList<EntityLayer.Contact> contacts = cm.getContacts();
-            ViewModel.Contact.ConversationsModelView cmv = new ViewModel.Contact.ConversationsModelView(contacts);
+            ViewModel.Contact.ContactsModelView cmv = new ViewModel.Contact.ContactsModelView(contacts);
             ListContact.DataContext = cmv;
+        }
+
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Window.AddContact ac = new Window.AddContact(this);
+            ac.Show();
+        }
+
+        private void ListContacts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (ListContact.SelectedItem != null)
+            {
+                Window.AddContact ac = new Window.AddContact(this,((ContactModelView)ListContact.SelectedItem).Num);
+                ac.Show();
+            }
         }
     }
 }

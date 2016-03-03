@@ -13,6 +13,9 @@ namespace DataAccessLayer
         List<Conversation> getConversations();
         List<Contact> getContacts();
         Conversation getConversationsFromContact(String contact);
+        Contact getContactFromString(String contact);
+
+        void addContact(Contact con);
             //Conversation getConversationByContact(Contact c); //Peut être superflux ?
         }
 }
