@@ -21,8 +21,18 @@ namespace DataAccessLayer
             {
                 conversation = new List<Conversation>();
 
-                Conversation conv1 = new Conversation(new Contact("John", "0607080910"));
-                Conversation conv2 = new Conversation(new Contact("Jim", "0470315054"));
+                if(contacts == null)
+                {
+                    contacts = new List<Contact>();
+                }
+                Contact c1 = new Contact("John", "0117117117");
+                Contact c2 = new Contact("Jim", "0470315054");
+
+                contacts.Add(c1);
+                contacts.Add(c2);
+
+                Conversation conv1 = new Conversation(c1);
+                Conversation conv2 = new Conversation(c2);
 
                 List<SMS> msgc1 = new List<SMS>();
                 msgc1.Add(new SMS("Coucou", conv1.Receiver));
@@ -96,9 +106,10 @@ namespace DataAccessLayer
             if (contacts == null)
             {
                 contacts = new List<Contact>();
-                contacts.Add(new Contact("John", "0607080910"));
-                contacts.Add(new Contact("Jim", "0470315054"));
             }
+            contacts.Add(new Contact("Shepard", "0607080945"));
+            contacts.Add(new Contact("Agent 47", "4747474747"));
+            
             contacts.Sort(delegate (Contact c1, Contact c2) { return c1.Nom.CompareTo(c2.Nom); });
             return contacts;
         }
