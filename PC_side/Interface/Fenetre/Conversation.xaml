@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projet"
         mc:Ignorable="d"
+        Closed="Window_Closed"
         Title="Conversation" Height="400" Width="400" Foreground="{StaticResource ApplicationTextColor}" Background="{StaticResource ApplicationBackgroundColor}" 
         WindowStyle="None" ResizeMode="NoResize">
     <Border x:Name="layoutRoot" BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="1">

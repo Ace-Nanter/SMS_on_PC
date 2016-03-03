@@ -66,5 +66,10 @@ namespace Projet
                 TextField.Text = "";
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            parent.removeConv(this);
+        }
     }
 }

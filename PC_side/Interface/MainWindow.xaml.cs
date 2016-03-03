@@ -53,6 +53,10 @@ namespace Projet
             convos.Add(conv);
         }
 
+        public void removeConv(Conversation conv)
+        {
+            convos.Remove(conv);
+        }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
