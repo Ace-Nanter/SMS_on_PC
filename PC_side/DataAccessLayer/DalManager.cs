@@ -60,5 +60,10 @@ namespace DataAccessLayer
         {
             bdd.addContact(con);
         }
+
+        public void removeContact(Contact con)
+        {
+            bdd.removeContact(con);
+        }
     }
 }

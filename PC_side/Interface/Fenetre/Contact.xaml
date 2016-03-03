@@ -26,6 +26,12 @@
             </Border>
             <ListBox x:Name="ListContact" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Contacts}"
                         SelectedItem="{Binding SelectedContact}" Background="Transparent" MouseDoubleClick="ListContacts_MouseDoubleClick">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Modifier" Click="MenuItem_Modifier_Click"/>
+                        <MenuItem Header="Supprimer" Click="MenuItem_Delete_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Background="Gray" Margin="5" Width="275">

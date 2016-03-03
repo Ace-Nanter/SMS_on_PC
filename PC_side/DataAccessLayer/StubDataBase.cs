@@ -55,6 +55,7 @@ namespace DataAccessLayer
             return null;
         }
 
+        #region Contact manager
         public Contact getContactFromString(String contact)
         {
 
@@ -79,6 +80,14 @@ namespace DataAccessLayer
             return contacts;
         }
 
+        public void removeContact(Contact con)
+        {
+            if (contacts != null)
+            {
+                contacts.Remove(con);
+            }
+        }
+
         public void addContact(Contact con)
         {
             if(contacts == null)
@@ -87,6 +96,7 @@ namespace DataAccessLayer
             }
             contacts.Add(con);
         }
+        #endregion
 
     }
 }

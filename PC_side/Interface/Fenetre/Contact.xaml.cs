@@ -49,10 +49,28 @@ namespace Projet
 
         private void ListContacts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            
+        }
+
+        private void MenuItem_Modifier_Click(object sender, RoutedEventArgs e)
+        {
             if (ListContact.SelectedItem != null)
             {
-                Window.AddContact ac = new Window.AddContact(this,((ContactModelView)ListContact.SelectedItem).Num);
+                Window.AddContact ac = new Window.AddContact(this, ((ContactModelView)ListContact.SelectedItem).Num);
                 ac.Show();
+            }
+        }
+
+        private void MenuItem_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+
+            if (ListContact.SelectedItem != null)
+            {
+                cm.removeContact(((ContactModelView)ListContact.SelectedItem).Contact);
+                IList<EntityLayer.Contact> contacts = cm.getContacts();
+                ViewModel.Contact.ContactsModelView cmv = new ViewModel.Contact.ContactsModelView(contacts);
+                ListContact.DataContext = cmv;
             }
         }
     }

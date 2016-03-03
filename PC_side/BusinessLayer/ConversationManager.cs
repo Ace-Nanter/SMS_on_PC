@@ -39,6 +39,11 @@ namespace BusinessLayer
             bdd.addContact(con);
         }
 
-            #endregion
+        public void removeContact(Contact con)
+        {
+            bdd.removeContact(con);
+        }
+
+        #endregion
     }
 }
