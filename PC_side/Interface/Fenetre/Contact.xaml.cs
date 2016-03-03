@@ -20,7 +20,7 @@ namespace Projet
     /// </summary>
     public partial class Contact : System.Windows.Window
     {
-        MainWindow parentWindow;
+        private MainWindow parentWindow;
 
 
         public Contact(MainWindow parentWindow)
@@ -34,6 +34,11 @@ namespace Projet
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        public MainWindow getParent()
+        {
+            return parentWindow;
         }
 
         public void ContactWindow_Loaded(object sender, RoutedEventArgs e)

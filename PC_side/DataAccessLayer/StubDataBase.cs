@@ -21,8 +21,18 @@ namespace DataAccessLayer
             {
                 conversation = new List<Conversation>();
 
-                Conversation conv1 = new Conversation(new Contact("John", "0607080910"));
-                Conversation conv2 = new Conversation(new Contact("Jim", "0470315054"));
+                if(contacts == null)
+                {
+                    contacts = new List<Contact>();
+                }
+                Contact c1 = new Contact("John", "0607080910");
+                Contact c2 = new Contact("Jim", "0470315054");
+
+                contacts.Add(c1);
+                contacts.Add(c2);
+
+                Conversation conv1 = new Conversation(c1);
+                Conversation conv2 = new Conversation(c2);
 
                 List<SMS> msgc1 = new List<SMS>();
                 msgc1.Add(new SMS("Coucou", conv1.Receiver));

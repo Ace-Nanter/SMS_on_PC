@@ -70,9 +70,9 @@ namespace Projet.Window
                         c = new EntityLayer.Contact(AddNom.Text, AddNum.Text);
                     }
                     cm.addContact(c);
-                    IList<EntityLayer.Contact> icon = cm.getContacts();                    
+                    IList<EntityLayer.Contact> icon = cm.getContacts();
                     parentWindow.ListContact.DataContext = new ViewModel.Contact.ContactsModelView(icon);
-                   
+
                 }
                 this.Close();
             }
@@ -86,6 +86,7 @@ namespace Projet.Window
         private void Window_Closed(object sender, EventArgs e)
         {
             parentWindow.ListContact.Items.Refresh();
+            parentWindow.getParent().ListConversations.Items.Refresh();
         }
     }
 }
