@@ -54,7 +54,17 @@ namespace Projet.ViewModel.Conversation
 
         public String LastMessage
         {
-            get { return ((EntityLayer.SMS)Messages.Last()).Body; }
+            get
+            {
+                if (Messages.Count != 0)
+                {
+                    return ((EntityLayer.SMS)Messages.Last()).Body;
+                }
+                else
+                {
+                    return "";
+                }
+            }
         }
 
         public List<EntityLayer.SMS> Messages

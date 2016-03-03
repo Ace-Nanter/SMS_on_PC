@@ -24,12 +24,38 @@ namespace Projet
 
         Contact ct;
 
+        List<Conversation> convos;
+
         public MainWindow()
         {
             InitializeComponent();
+            convos = new List<Conversation>();
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
+        }
+
+        public Boolean findConvos(String num)
+        {
+            foreach(Conversation c in convos)
+            {
+                if(c.getContact().Equals(num))
+                {
+                    c.Focus();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void addConv(Conversation conv)
+        {
+            convos.Add(conv);
+        }
+
+        public void removeConv(Conversation conv)
+        {
+            convos.Remove(conv);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -58,7 +84,7 @@ namespace Projet
 
         private void expander_Expanded(object sender, RoutedEventArgs e)
         {
-            ct = new Contact();
+            ct = new Contact(this);
             ct.Show();
 
            
@@ -82,8 +108,12 @@ namespace Projet
         {
             if (ListConversations.SelectedItem != null)
             {
-                Conversation cv = new Conversation(((ConversationModelView)ListConversations.SelectedItem).Receiver.Num);
-                cv.Show();
+                if (!findConvos(((ConversationModelView)ListConversations.SelectedItem).Receiver.Num))
+                {
+                    Conversation cw = new Conversation(this, ((ConversationModelView)ListConversations.SelectedItem).Receiver.Num);
+                    addConv(cw);
+                    cw.Show();
+                }
             }
         }
     }

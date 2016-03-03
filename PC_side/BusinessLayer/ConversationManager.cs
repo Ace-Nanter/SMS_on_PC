@@ -21,6 +21,15 @@ namespace BusinessLayer
         {
             return bdd.getConversationsFromContact(contact);
         }
+
+        public void AddConversation(Contact con)
+        {
+            bdd.AddConversation(con);
+        }
+        public void AddMessageToConv(SMS sms, Conversation conv)
+        {
+            bdd.AddMessageToConv(sms, conv);
+        }
         #endregion
 
         #region Contact management
