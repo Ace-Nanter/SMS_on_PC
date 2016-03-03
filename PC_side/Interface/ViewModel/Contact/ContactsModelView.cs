@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Projet.ViewModel.Contact
 {
-    public class ConversationsModelView : ViewModelBase
+    public class ContactsModelView : ViewModelBase
     {
 
         private ObservableCollection<ContactModelView> m_contact;
         private ContactModelView m_selectedItem;
-
+        
         public ObservableCollection<ContactModelView> Contacts
         {
             get { return m_contact; }
@@ -34,7 +34,7 @@ namespace Projet.ViewModel.Contact
             }
         }
 
-        public ConversationsModelView(IList<EntityLayer.Contact> conts)
+        public ContactsModelView(IList<EntityLayer.Contact> conts)
         {
             m_contact = new ObservableCollection<ContactModelView>();
             foreach (EntityLayer.Contact c in conts)
@@ -42,5 +42,7 @@ namespace Projet.ViewModel.Contact
                 m_contact.Add(new ContactModelView(c));
             }
         }
+
+        
     }
 }

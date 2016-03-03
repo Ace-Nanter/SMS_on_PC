@@ -76,11 +76,15 @@
     <Compile Include="UserControls\CloseButton.xaml.cs">
       <DependentUpon>CloseButton.xaml</DependentUpon>
     </Compile>
-    <Page Include="Window\Contact.xaml">
+    <Page Include="Fenetre\AddContact.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window\Conversation.xaml">
+    <Page Include="Fenetre\Contact.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Fenetre\Conversation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -100,10 +104,13 @@
     <Compile Include="ViewModel\SMS\SMSModelView.cs" />
     <Compile Include="ViewModel\SMS\SMSsModelView.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="Window\Contact.xaml.cs">
+    <Compile Include="Fenetre\AddContact.xaml.cs">
+      <DependentUpon>AddContact.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fenetre\Contact.xaml.cs">
       <DependentUpon>Contact.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Window\Conversation.xaml.cs">
+    <Compile Include="Fenetre\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">

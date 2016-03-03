@@ -38,7 +38,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Heure}" Foreground="White" />
                                     <TextBlock Text="{Binding Contact}" Foreground="Green"/>
-                                    <TextBlock Text=": " />
+                                    <TextBlock Text=": " Foreground="White"/>
                                     <TextBlock Text="{Binding Message}" Foreground="White" />
                                 </StackPanel>                               
                             </DataTemplate>
