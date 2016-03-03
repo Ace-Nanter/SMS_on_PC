@@ -1,20 +1,13 @@
 ﻿using EntityLayer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 using UsbLayer;
 
 namespace TestConsole {
     class Program {
         static void Main(string[] args) {
-            UsbManager manager = new UsbManager();
-
-            Console.Write("Veuillez connecter votre appareil s'il vous plaît...");
-            Console.ReadLine();
+            UsbManager manager = UsbManager.getInstance(new Utilities());
+            
             try {
                 if (manager.connect()) {
                     while(true) {
@@ -24,7 +17,7 @@ namespace TestConsole {
                         Contact c = new Contact("Adrien", "0647657049");
                         if (!string.IsNullOrEmpty(msg)) {
                             SMS sms = new SMS(msg, c);
-                            sms.send(manager);
+                            manager.send(sms);
                         }
                         Console.WriteLine("Message envoyé !");
                     }

@@ -45,12 +45,6 @@
     <Compile Include="SMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UsbLayer\UsbLayer.csproj">
-      <Project>{b265b115-4df8-4c71-a540-58b95aa38bf3}</Project>
-      <Name>UsbLayer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

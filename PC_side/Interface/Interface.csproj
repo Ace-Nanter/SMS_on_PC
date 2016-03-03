@@ -174,6 +174,10 @@
       <Project>{fd586863-c02e-4757-9fc7-5e9d4f5643da}</Project>
       <Name>EntityLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UsbLayer\UsbLayer.csproj">
+      <Project>{b265b115-4df8-4c71-a540-58b95aa38bf3}</Project>
+      <Name>UsbLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Picture\anonyme.png" />

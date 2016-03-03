@@ -2,7 +2,7 @@
 using System.Text;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
-
+using EntityLayer;
 
 namespace UsbLayer {
 
@@ -10,9 +10,15 @@ namespace UsbLayer {
     /// UsbManager gère les communications vers le device
     /// </summary>
     public class UsbManager {
-        // Attention : Sujet à changement selon si téléphone en mode DEBUG ou non et selon le téléphone utilisé
 
+        // Requirements for Singleton pattern
+        private static UsbManager INSTANCE;
+        private static readonly object padlock = new object();
+
+        // Informations envoyées au téléphone
         private readonly string[] hostInformations = new string[6];
+
+        private UsbInterface m_listener = null;                 // Listener to send events
 
         private UsbDevice m_device = null;                      // Device avec lequel on se connecte
         private IUsbDevice DeviceInterface = null;              // Interface du device
@@ -20,13 +26,31 @@ namespace UsbLayer {
         private Sender m_sender = null;                         // Classe qui permet d'envoyer
         private ReceiveHandler m_handler = null;                // Classe qui permet de gérer les messages reçus
 
-        private bool is_connected = false;                      // Booléen pour indiquer l'état de la connexion
+        private bool m_connected = false;                      // Booléen pour indiquer l'état de la connexion
+
+        public static UsbManager getInstance(UsbInterface listener)
+        {
+            if (listener == null && INSTANCE == null) {
+                return null;
+            }
+
+            if (INSTANCE == null) {
+                lock (padlock) {
+                    if (INSTANCE == null) {
+                        INSTANCE = new UsbManager(listener);
+                    }
+                }
+            }
+            return INSTANCE;
+        }
 
         /// <summary>
         /// Constructeur par défaut de la classe UsbManager
         /// </summary>
-        public UsbManager(/*USBInterface listener*/) { // (Obligé de préciser pour éviter les confusions)
+        private UsbManager(UsbInterface listener) { // (Obligé de préciser pour éviter les confusions)
             #region Initialisation des attributs
+
+            m_listener = listener;
 
             hostInformations = new string[6] {                  // Stocker les infos qu'on envoie au téléphone
                 Properties.Resources.constructeur,
@@ -51,8 +75,20 @@ namespace UsbLayer {
             }
         }
 
+        /// <summary>
+        /// Get the Device used by the manager
+        /// </summary>
+        /// <returns>The device used by the manager.</returns>
         public UsbDevice getDevice() {
             return m_device;
+        }
+
+        /// <summary>
+        /// Say if the manager is connected or not to the device.
+        /// </summary>
+        /// <returns>True if it is, otherwise false.</returns>
+        public bool is_connected() {
+            return m_connected;
         }
 
         /// <summary>
@@ -176,16 +212,18 @@ namespace UsbLayer {
                         throw new Exception("Problème lors de la récupération de l'interface avec le téléphone");
 
                     // Activation de la lecture/écriture
+                    m_connected = true;
                     m_receiver = new Receiver(this);
                     m_sender = new Sender(this);
                     m_handler = new ReceiveHandler(this);
+                    m_listener.hasBeenConnected();
 
                     #endregion
                 }
             }
             catch (Exception e) {
                 flag = false;
-                is_connected = false;
+                m_connected = false;
                 // TODO : un petit log ?
                 Console.WriteLine(e);
                 this.stop();                                        // On arrête tout
@@ -213,6 +251,49 @@ namespace UsbLayer {
         public void send(string msg) {
             m_sender.send(msg);
         }
+
+        /// <summary>
+        /// Send a SMS by USB
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
+        public bool send(SMS sms) {
+
+            int nbComs;
+            int limit = 80;
+            string buffer = "";
+
+            if (string.IsNullOrEmpty(sms.Body)) {
+                throw new Exception("Empty Message Body !");
+            }
+
+            if (sms.Body.Length < 80) {
+                send("SMSHEADER:" + sms.ID + ":" + sms.Contact.Num + ":1");
+                send("SMSBODY:1:" + sms.Body);
+            }
+            else {
+                nbComs = (sms.Body.Length + limit - 1) / limit;
+                buffer = "SMSHEADER:" + sms.ID + ":" + sms.Contact.Num + ":" + nbComs;
+                send(buffer);
+
+                int com = 1;
+                for (int i = 0; i < sms.Body.Length; i += limit) {
+                    buffer = "SMSBODY:" + com + ":";
+                    buffer += sms.Body.Substring(i, Math.Min(limit, sms.Body.Length - i));
+                    com++;
+
+                    // TODO : to remove
+                    Console.WriteLine("Envoi de {0}", buffer);
+
+                    send(buffer);
+                }
+            }
+
+            sms.Date = DateTime.Now;                  // The message is sent now
+
+            return true;
+        }
+
         /// <summary>
         /// Libère toutes les ressources utilisées avant de déinstancier la classe
         /// </summary>
@@ -246,6 +327,29 @@ namespace UsbLayer {
             }
             m_device = null;
             UsbDevice.Exit();
+        }
+
+        /// <summary>
+        /// Appelle la méthode hasBeenConnected du listener
+        /// </summary>
+        public void hasBeenConnected() {
+            m_connected = true;
+            m_listener.hasBeenConnected();
+        }
+
+        /// <summary>
+        /// Appelle la méthode hasRead du listener
+        /// </summary>
+        /// <param name="msg"></param>
+        public void hasRead(string msg) {
+            m_listener.hasRead(msg);
+        }
+
+        /// <summary>
+        /// Appelle la méthode hasBeenStopped du listener
+        /// </summary>
+        public void hasBeenStopped() {
+            m_listener.hasBeenStopped();
         }
     }
 }

@@ -1,38 +1,50 @@
-﻿using Projet.ViewModel.Conversation;
+﻿using BusinessLayer;
+using Projet.ViewModel.Conversation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UsbLayer;
+using EntityLayer;
 
 namespace Projet
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : System.Windows.Window, UsbInterface
     {
 
         Contact ct;
-
+        UsbManager m_manager = null;
         List<Conversation> convos;
 
         public MainWindow()
         {
             InitializeComponent();
             convos = new List<Conversation>();
+            m_manager = UsbManager.getInstance(this);
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width;
             this.Top = desktopWorkingArea.Bottom - this.Height;
+            initUSB();
+        }
+
+        private void initUSB() {
+            try {
+                if(m_manager.connect()) {
+                    MessageBox.Show("OK !",
+                        "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else {
+                    MessageBox.Show("Failure !"
+                        ,"Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch(Exception e) {
+                MessageBox.Show("An exception occured : " + e,
+                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public Boolean findConvos(String num)
@@ -71,6 +83,7 @@ namespace Projet
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            m_manager.stop();
             Application.Current.Shutdown();
         }
 
@@ -85,9 +98,7 @@ namespace Projet
         private void expander_Expanded(object sender, RoutedEventArgs e)
         {
             ct = new Contact(this);
-            ct.Show();
-
-           
+            ct.Show();  
         }
 
         private void expander_Collapsed(object sender, RoutedEventArgs e)
@@ -115,6 +126,26 @@ namespace Projet
                     cw.Show();
                 }
             }
+        }
+
+        public void hasRead(string msg) {
+            
+        }
+
+        public void hasBeenConnected() {
+            //StateText.Text = "Connecté";
+        }
+
+        public void hasBeenStopped() {
+            StateText.Text = "Arrêté";
+        }
+
+        /// <summary>
+        /// Add the message to the conversation
+        /// </summary>
+        /// <param name="sms"></param>
+        public void smsReceived(SMS sms) {
+            
         }
     }
 }

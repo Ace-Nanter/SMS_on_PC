@@ -33,6 +33,10 @@ namespace UsbLayer {
                     }
                     else {
                         m_manager.send("ACK");                              // Acquittal
+                        if (toHandle.StartsWith("OK")) {
+                            m_manager.hasBeenConnected();
+                        }
+                        
                     }
                     /*
                     if (toHandle.startsWith("SMSHEADER")) {                 // SMS Header

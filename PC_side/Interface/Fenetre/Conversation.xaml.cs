@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using UsbLayer;
 
 namespace Projet
 {
@@ -58,6 +59,9 @@ namespace Projet
                 EntityLayer.Conversation convs = cm.getConversationsFromContact(contact);
                 ViewModel.SMS.SMSsModelView cmv = new ViewModel.SMS.SMSsModelView(convs.Messages);
                 FilConv.DataContext = cmv;
+
+                UsbManager manager = UsbManager.getInstance(null);
+                manager.send(sms);
 
                 IList<EntityLayer.Conversation> convs2 = cm.getConversations();
                 ViewModel.Conversation.ConversationsModelView cmv2 = new ViewModel.Conversation.ConversationsModelView(convs2);
