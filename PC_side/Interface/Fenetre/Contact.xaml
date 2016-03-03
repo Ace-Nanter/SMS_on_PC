@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projet"
         mc:Ignorable="d"
+        ShowInTaskbar="False"
         Title="Contact" Height="500" Width="300" Foreground="{StaticResource ApplicationTextColor}" Background="{StaticResource ApplicationBackgroundColor}" 
         WindowStyle="None" ResizeMode="NoResize"
         Loaded="ContactWindow_Loaded"
