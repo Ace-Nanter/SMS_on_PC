@@ -19,9 +19,14 @@ namespace Projet
     /// </summary>
     public partial class Conversation : System.Windows.Window
     {
-        public Conversation(String contact)
+        private String contact;
+        private MainWindow parent;
+
+        public Conversation(MainWindow parent,String contact)
         {
             InitializeComponent();
+            this.contact = contact;
+            this.parent = parent;
             BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
 
             EntityLayer.Conversation convs = cm.getConversationsFromContact(contact);
@@ -29,11 +34,34 @@ namespace Projet
             FilConv.DataContext = cmv;
         }
 
-
+        public String getContact()
+        {
+            return contact;
+        }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void AppButton_Click(object sender, EventArgs e)
+        {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            if(TextField.Text.Length > 0)
+            {
+                EntityLayer.SMS sms = new EntityLayer.SMS(TextField.Text, cm.getContactFromString(contact));
+                cm.AddMessageToConv(sms, cm.getConversationsFromContact(contact));
+
+                EntityLayer.Conversation convs = cm.getConversationsFromContact(contact);
+                ViewModel.SMS.SMSsModelView cmv = new ViewModel.SMS.SMSsModelView(convs.Messages);
+                FilConv.DataContext = cmv;
+
+                IList<EntityLayer.Conversation> convs2 = cm.getConversations();
+                ViewModel.Conversation.ConversationsModelView cmv2 = new ViewModel.Conversation.ConversationsModelView(convs2);
+                parent.ListConversations.DataContext = cmv2;
+
+                TextField.Text = "";
+            }
         }
     }
 }

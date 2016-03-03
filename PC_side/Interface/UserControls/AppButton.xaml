@@ -51,6 +51,6 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <Button/>
+        <Button Click="OnButtonClick"/>
     </Grid>
 </UserControl>

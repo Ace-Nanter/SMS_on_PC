@@ -16,5 +16,7 @@ namespace DataAccessLayer
         Contact getContactFromString(String contact);
         void removeContact(Contact con);
         void addContact(Contact con);
+        void AddConversation(Contact con);
+        void AddMessageToConv(SMS sms, Conversation conv);
     }
 }

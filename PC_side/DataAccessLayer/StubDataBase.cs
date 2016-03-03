@@ -14,6 +14,7 @@ namespace DataAccessLayer
 
         private static List<Contact> contacts;
 
+        #region Conversation manager
         public List<Conversation> getConversations()
         {
             if (conversation == null)
@@ -55,14 +56,36 @@ namespace DataAccessLayer
             return null;
         }
 
-        #region Contact manager
-        public Contact getContactFromString(String contact)
+        public void AddConversation(Contact con)
         {
-
-            foreach (Contact c in contacts)
+            if (conversation == null)
             {
-                if (c.Num.Equals(contact))
-                    return c;
+                conversation = new List<Conversation>();
+            }
+            Conversation conv = new Conversation(con);
+            conversation.Add(conv);
+        }
+
+        public void AddMessageToConv(SMS sms,Conversation conv)
+        {
+            foreach (Conversation c in conversation)
+            {
+                if (c.Receiver.Num.Equals(conv.Receiver.Num))
+                    c.Messages.Add(sms);
+            }
+        }
+        #endregion
+
+        #region Contact manager
+        public Contact getContactFromString(String num)
+        {
+            if (contacts != null)
+            {
+                foreach (Contact c in contacts)
+                {
+                    if (c.Num.Equals(num))
+                        return c;
+                }
             }
             return null;
         }

@@ -20,9 +20,13 @@ namespace Projet
     /// </summary>
     public partial class Contact : System.Windows.Window
     {
-        public Contact()
+        MainWindow parentWindow;
+
+
+        public Contact(MainWindow parentWindow)
         {
             InitializeComponent();
+            this.parentWindow = parentWindow;
             var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
             this.Left = desktopWorkingArea.Right - this.Width * 2;
             this.Top = desktopWorkingArea.Bottom - this.Height;
@@ -49,7 +53,28 @@ namespace Projet
 
         private void ListContacts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            if (ListContact.SelectedItem != null)
+            {
+                EntityLayer.Conversation c;
+
+                c = cm.getConversationsFromContact(((ContactModelView)ListContact.SelectedItem).Contact.Num);
+                if (c == null)
+                {
+                    cm.AddConversation(((ContactModelView)ListContact.SelectedItem).Contact);
+                    IList<EntityLayer.Conversation> convs = cm.getConversations();
+                    ViewModel.Conversation.ConversationsModelView cmv = new ViewModel.Conversation.ConversationsModelView(convs);
+                    parentWindow.ListConversations.DataContext = cmv;
+
+                }
+
+                if (!parentWindow.findConvos(((ContactModelView)ListContact.SelectedItem).Contact.Num))
+                {
+                    Conversation cw = new Conversation(parentWindow, ((ContactModelView)ListContact.SelectedItem).Contact.Num);
+                    parentWindow.addConv(cw);
+                    cw.Show();
+                }   
+            }
         }
 
         private void MenuItem_Modifier_Click(object sender, RoutedEventArgs e)

@@ -43,5 +43,15 @@ namespace Projet.UserControls
             InitializeComponent();
             this.DataContext = this;
         }
+
+        public event EventHandler Event;
+
+        private void OnButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (Event != null)
+            {
+                Event(this, new EventArgs());
+            }
+        }
     }
 }

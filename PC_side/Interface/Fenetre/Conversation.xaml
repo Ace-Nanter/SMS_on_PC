@@ -46,8 +46,8 @@
                     </ListBox>                    
                 </ScrollViewer>
             </Border>    
-            <TextBox Grid.Row="2" Grid.Column="0" Margin="5,5,5,5" Background="{StaticResource ApplicationBackgroundColor}"/>
-            <UserControls:AppButton Grid.Row="2" Grid.Column="1" Label="Envoyer"/>
+            <TextBox x:Name="TextField" Grid.Row="2" Grid.Column="0" Margin="5,5,5,5" Background="{StaticResource ApplicationBackgroundColor}" Foreground="White"/>
+            <UserControls:AppButton Grid.Row="2" Grid.Column="1" Label="Envoyer" Event="AppButton_Click"/>
         </Grid>
     </Border>
 </Window>
