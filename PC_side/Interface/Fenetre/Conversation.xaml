@@ -21,7 +21,7 @@
             <Grid Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"  Background="{StaticResource ApplicationBackgroundColor}" 
                     MouseDown="Border_MouseDown">
                 <Border BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="0,0,0,1" >
-                    <TextBlock Text="Conversation" HorizontalAlignment="Left" Style="{StaticResource ApplicationTitle}"/>
+                    <TextBlock x:Name="ConvTitle" Text="Conversation" HorizontalAlignment="Left" Style="{StaticResource ApplicationTitle}"/>
                 </Border>                
                 <UserControls:CloseButton HorizontalAlignment="Right" Margin="5" />
             </Grid>

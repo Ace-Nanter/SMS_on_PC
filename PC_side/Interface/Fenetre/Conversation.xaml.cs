@@ -31,6 +31,9 @@ namespace Projet
 
             EntityLayer.Conversation convs = cm.getConversationsFromContact(contact);
             ViewModel.SMS.SMSsModelView cmv = new ViewModel.SMS.SMSsModelView(convs.Messages);
+
+            ConvTitle.Text = "Conversation avec " + convs.Receiver.Nom + " (" + convs.Receiver.Num + ")";
+
             FilConv.DataContext = cmv;
         }
 
