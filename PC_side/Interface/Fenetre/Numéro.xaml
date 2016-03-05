@@ -1,0 +1,40 @@
+﻿<Window xmlns:UserControls="clr-namespace:Projet.UserControls"
+        x:Class="Projet.Fenetre.Numéro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Projet.Fenetre"
+        WindowStyle="None" ResizeMode="NoResize"
+        Margin="5"
+        Title="Nouvelle conversation" Width="400" Height="150"
+        Background="{StaticResource ApplicationBackgroundColor}">
+    <Border x:Name="layoutRoot" BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="1">
+        <Grid Background="{StaticResource ApplicationBackgroundColor}" Margin="5" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="{StaticResource ApplicationBackgroundColor}"
+                   MouseDown="Grid_MouseDown">
+                <Border BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="0,0,0,1">
+                    <TextBlock x:Name="AddTitle" Text="Nouvelle conversation" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ApplicationTitle}" Margin="0"/>
+                </Border>
+                <UserControls:CloseButton HorizontalAlignment="Right" Margin="5" />
+            </Grid>     
+            <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Num :" HorizontalAlignment="Left"  VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="16"/>
+                <TextBox x:Name="AddNum" Width="200" Margin="10,10,0,10" Height="30" Text="" HorizontalAlignment="Left" Background="{StaticResource ApplicationBackgroundColor}" Foreground="White" FontSize="16"/>
+            </StackPanel>
+
+            <Border Grid.Row="2"  Height="25" Width="150" Margin="0,0,0,10" Background="{StaticResource ApplicationButtonColor}" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
+                <TextBlock TextWrapping="Wrap" >
+                            <Hyperlink Style="{StaticResource ApplicationHoverButton}" FontSize="12" Click="Hyperlink_Click" >
+                                <TextBlock x:Name="ButtonAdd" Text="+ Démarrer"/>
+                            </Hyperlink>
+                </TextBlock>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

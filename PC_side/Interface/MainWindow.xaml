@@ -44,7 +44,17 @@
                 </WrapPanel>
             </Border>
             <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" BorderBrush="{StaticResource ApplicationBorderColor}">
-                <TextBlock Text="//Info: Ici résidera le menu de fichier si utile"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock TextWrapping="Wrap" Margin="0,0,20,0">
+                        <Hyperlink x:Name="NewConv" Style="{StaticResource ApplicationHoverButton}" Foreground="White" FontSize="12" Click="NewConv_Click">Numéro</Hyperlink>
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="20,0,20,0">
+                        <Hyperlink x:Name="Import" Style="{StaticResource ApplicationHoverButton}" Foreground="White" FontSize="12" Click="Import_Click">Importer</Hyperlink>
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="20,0,20,0">
+                        <Hyperlink x:Name="Export" Style="{StaticResource ApplicationHoverButton}"  Foreground="White" FontSize="12" Click="Export_Click">Exporter </Hyperlink>
+                    </TextBlock>
+                </StackPanel>               
             </Border>
             <Expander x:Name="expander" Grid.Row="2" Grid.Column="0" ExpandDirection="Left" VerticalAlignment="Center" HorizontalAlignment="Left" Expanded="expander_Expanded" Collapsed="expander_Collapsed">
             </Expander>

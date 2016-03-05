@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using UsbLayer;
 using EntityLayer;
+using Projet.Fenetre;
 
 namespace Projet
 {
@@ -146,6 +147,22 @@ namespace Projet
         /// <param name="sms"></param>
         public void smsReceived(SMS sms) {
             
+        }
+
+        private void NewConv_Click(object sender, RoutedEventArgs e)
+        {
+            Numéro n = new Numéro(this);
+            n.Show();
+        }
+
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
