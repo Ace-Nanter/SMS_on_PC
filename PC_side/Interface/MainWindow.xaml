@@ -51,8 +51,15 @@
                     <TextBlock TextWrapping="Wrap" Margin="20,0,20,0">
                         <Hyperlink x:Name="Import" Style="{StaticResource ApplicationHoverButton}" Foreground="White" FontSize="12" Click="Import_Click">Importer</Hyperlink>
                     </TextBlock>
-                    <TextBlock TextWrapping="Wrap" Margin="20,0,20,0">
-                        <Hyperlink x:Name="Export" Style="{StaticResource ApplicationHoverButton}"  Foreground="White" FontSize="12" Click="Export_Click">Exporter </Hyperlink>
+                    <Menu  Margin="20,0,20,0" Background="Transparent" VerticalAlignment="Center">
+                        <MenuItem Header="Exporter"  Foreground="White" FontSize="12">
+                            <MenuItem Header="Contacts" Click="Export_Cont_Click" Background="{StaticResource ApplicationBackgroundColor}" FontSize="12" />
+                            <MenuItem Header="Historiques"  Click="Export_Conv_Click" FontSize="12" Background="{StaticResource ApplicationBackgroundColor}"/>
+                        </MenuItem>
+                    </Menu>
+
+                    <TextBlock TextWrapping="Wrap" >
+                        <Hyperlink x:Name="Export" Style="{StaticResource ApplicationHoverButton}"  Foreground="White" FontSize="12" >Exporter </Hyperlink>
                     </TextBlock>
                 </StackPanel>               
             </Border>

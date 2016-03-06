@@ -160,9 +160,16 @@ namespace Projet
 
         }
 
-        private void Export_Click(object sender, RoutedEventArgs e)
+        private void Export_Cont_Click(object sender, RoutedEventArgs e)
         {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            cm.saveContacts("Contacts.xml");
+        }
 
+        private void Export_Conv_Click(object sender, RoutedEventArgs e)
+        {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            cm.saveConversations("Conversations.xml");
         }
     }
 }

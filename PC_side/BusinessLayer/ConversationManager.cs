@@ -30,6 +30,11 @@ namespace BusinessLayer
         {
             bdd.AddMessageToConv(sms, conv);
         }
+
+        public void saveConversations(String FileName)
+        {
+            bdd.saveConversations(FileName);
+        }
         #endregion
 
         #region Contact management
@@ -51,6 +56,11 @@ namespace BusinessLayer
         public void removeContact(Contact con)
         {
             bdd.removeContact(con);
+        }
+
+        public void saveContacts(String FileName)
+        {
+            bdd.saveContacts(FileName);
         }
 
         #endregion

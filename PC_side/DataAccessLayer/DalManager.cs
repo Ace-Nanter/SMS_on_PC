@@ -1,4 +1,5 @@
-﻿using EntityLayer;
+﻿using DataAccessLayer.Parser;
+using EntityLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,16 @@ namespace DataAccessLayer
         private DalManager()
         {
             bdd = new StubDataBase();
+        }
+
+        public void saveContacts(String FileName)
+        {
+            XMLWriter.saveContacts(FileName);
+        }
+
+        public void saveConversations(String FileName)
+        {
+            XMLWriter.saveConversations(FileName);
         }
 
         public List<Conversation> getConversations()
