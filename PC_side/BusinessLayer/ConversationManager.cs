@@ -35,6 +35,11 @@ namespace BusinessLayer
         {
             bdd.saveConversations(FileName);
         }
+
+        public void loadHistorique(String FileName)
+        {
+            bdd.loadHistorique(FileName);
+        }
         #endregion
 
         #region Contact management
@@ -61,6 +66,11 @@ namespace BusinessLayer
         public void saveContacts(String FileName)
         {
             bdd.saveContacts(FileName);
+        }
+
+        public void loadContacts(String FileName)
+        {
+            bdd.loadContacts(FileName);
         }
 
         #endregion

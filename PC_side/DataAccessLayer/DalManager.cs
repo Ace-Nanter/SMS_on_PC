@@ -47,6 +47,16 @@ namespace DataAccessLayer
             XMLWriter.saveConversations(FileName);
         }
 
+        public void loadContacts(String FileName)
+        {
+            XMLReader.loadContacts(FileName);
+        }
+
+        public void loadHistorique(String FileName)
+        {
+            XMLReader.loadHistoriques(FileName);
+        }
+
         public List<Conversation> getConversations()
         {
             return bdd.getConversations();

@@ -110,7 +110,11 @@ namespace Projet
         private void AppWindow_Loaded(object sender, RoutedEventArgs e)
         {
             BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
-            
+
+            Import_Conv_Click(this, null);
+            Import_Cont_Click(this, null);
+
+
             IList<EntityLayer.Conversation> convs = cm.getConversations();
             ViewModel.Conversation.ConversationsModelView cmv = new ViewModel.Conversation.ConversationsModelView(convs);
             ListConversations.DataContext = cmv;
@@ -155,10 +159,18 @@ namespace Projet
             n.Show();
         }
 
-        private void Import_Click(object sender, RoutedEventArgs e)
+        private void Import_Cont_Click(object sender, RoutedEventArgs e)
         {
-
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            cm.loadContacts("Contacts.xml");
         }
+
+        private void Import_Conv_Click(object sender, RoutedEventArgs e)
+        {
+            BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
+            cm.loadHistorique("Conversations.xml");
+        }
+
 
         private void Export_Cont_Click(object sender, RoutedEventArgs e)
         {
@@ -170,6 +182,12 @@ namespace Projet
         {
             BusinessLayer.ConversationManager cm = new BusinessLayer.ConversationManager();
             cm.saveConversations("Conversations.xml");
+        }
+
+        private void AppWindow_Closed(object sender, EventArgs e)
+        {
+            Export_Cont_Click(this,null);
+            Export_Conv_Click(this,null);
         }
     }
 }

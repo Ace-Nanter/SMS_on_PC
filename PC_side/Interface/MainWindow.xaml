@@ -9,6 +9,7 @@
         Title="SMS on PC" Height="500" Width="300" Foreground="{StaticResource ApplicationTextColor}" Background="{StaticResource ApplicationBackgroundColor}" 
         WindowStyle="None" ResizeMode="NoResize"
         Loaded="AppWindow_Loaded"
+        Closed="AppWindow_Closed"
         WindowStartupLocation="Manual" Top="0">
     <Border x:Name="layoutRoot" BorderBrush="{StaticResource ApplicationBorderColor}" BorderThickness="1">
         <Grid>
@@ -48,19 +49,18 @@
                     <TextBlock TextWrapping="Wrap" Margin="0,0,20,0">
                         <Hyperlink x:Name="NewConv" Style="{StaticResource ApplicationHoverButton}" Foreground="White" FontSize="12" Click="NewConv_Click">Numéro</Hyperlink>
                     </TextBlock>
-                    <TextBlock TextWrapping="Wrap" Margin="20,0,20,0">
-                        <Hyperlink x:Name="Import" Style="{StaticResource ApplicationHoverButton}" Foreground="White" FontSize="12" Click="Import_Click">Importer</Hyperlink>
-                    </TextBlock>
+                    <Menu  Margin="20,0,20,0" Background="Transparent" VerticalAlignment="Center">
+                        <MenuItem Header="Importer"  Foreground="White" FontSize="12">
+                            <MenuItem Header="Contacts" Click="Import_Cont_Click" Background="{StaticResource ApplicationBackgroundColor}" FontSize="12" />
+                            <MenuItem Header="Historiques"  Click="Import_Conv_Click" FontSize="12" Background="{StaticResource ApplicationBackgroundColor}"/>
+                        </MenuItem>
+                    </Menu>
                     <Menu  Margin="20,0,20,0" Background="Transparent" VerticalAlignment="Center">
                         <MenuItem Header="Exporter"  Foreground="White" FontSize="12">
                             <MenuItem Header="Contacts" Click="Export_Cont_Click" Background="{StaticResource ApplicationBackgroundColor}" FontSize="12" />
                             <MenuItem Header="Historiques"  Click="Export_Conv_Click" FontSize="12" Background="{StaticResource ApplicationBackgroundColor}"/>
                         </MenuItem>
                     </Menu>
-
-                    <TextBlock TextWrapping="Wrap" >
-                        <Hyperlink x:Name="Export" Style="{StaticResource ApplicationHoverButton}"  Foreground="White" FontSize="12" >Exporter </Hyperlink>
-                    </TextBlock>
                 </StackPanel>               
             </Border>
             <Expander x:Name="expander" Grid.Row="2" Grid.Column="0" ExpandDirection="Left" VerticalAlignment="Center" HorizontalAlignment="Left" Expanded="expander_Expanded" Collapsed="expander_Collapsed">

@@ -31,6 +31,15 @@ namespace EntityLayer
 
         }
         */
+        public SMS(int id,string body,DateTime date, Contact contact,bool received,bool notified) : this()
+        {
+            m_id = id;
+            m_date = date;
+            m_received = received;
+            m_notified = notified;
+            m_body = body;
+            m_contact = contact;
+        }
 
         public SMS(string body, Contact contact) : this() {
             m_received = false;
