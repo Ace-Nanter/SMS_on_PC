@@ -54,7 +54,6 @@
     <Compile Include="Sender.cs" />
     <Compile Include="UsbInterface.cs" />
     <Compile Include="UsbManager.cs" />
-    <Compile Include="UsbString.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -25,12 +25,6 @@ namespace EntityLayer
             m_id = id_setter++;
             m_date = DateTime.Now;
         }
-
-        /*
-        public SMS(m_body, m_date, m_received) {
-
-        }
-        */
         public SMS(int id,string body,DateTime date, Contact contact,bool received,bool notified) : this()
         {
             m_id = id;
@@ -46,6 +40,14 @@ namespace EntityLayer
             m_notified = false;
             m_body = body;
             m_contact = contact;
+        }
+
+        public SMS(Contact contact, DateTime date, bool received) : this() 
+        {
+            m_body = "";
+            m_contact = contact;
+            m_received = received;
+            m_notified = false;
         }
 
         public int ID

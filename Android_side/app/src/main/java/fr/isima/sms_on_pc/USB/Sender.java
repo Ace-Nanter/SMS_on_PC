@@ -4,7 +4,8 @@ import android.util.Log;                        // TODO : to remove
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by Ace Nanter on 19/01/2016.
@@ -15,7 +16,7 @@ public class Sender {
     private boolean m_stop = false;
     private writeThread m_writeThread = null;
     private FileOutputStream m_output = null;
-    private PriorityQueue<String> m_toSend;
+    private Queue<String> m_toSend;
 
     public Sender(FileDescriptor fd) throws Exception {
         if(fd == null) {
@@ -25,7 +26,7 @@ public class Sender {
         }
 
         m_output = new FileOutputStream(fd);
-        m_toSend = new PriorityQueue<>();
+        m_toSend = new LinkedList<>();
 
         m_output.flush();                                   // Flush du buffer de sortie
         m_writeThread = new writeThread();                  // Création du thread
@@ -66,6 +67,9 @@ public class Sender {
 
                                 buffer = msg.getBytes();                                // Mise au format binaire
                                 m_output.write(buffer, 0, buffer.length);               // Envoi
+
+                                Log.d(Sender.class.getSimpleName(), "Sender : Envoi de : " + msg);
+
                             } catch (Exception e) {
                                 Log.d(Sender.class.getSimpleName(), "An exception occured : " + e);
                             }

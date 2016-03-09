@@ -64,22 +64,32 @@ public class Incoming extends BroadcastReceiver {
                             // Check if the message is multiparted or not
                             if (body.length() < 80) {
 
-                                Log.d(Incoming.class.getSimpleName(), "Moins");
+                                // TODO : to remove
+                                try {
+                                    Log.d(Incoming.class.getSimpleName(), "Une page");
 
-                                // Send the header
-                                buffer = "SMSHEADER:" + phoneNumber;
-                                //buffer += ":" + m_date.getTime().toString();
-                                buffer += ":" + 1;
+                                    // Send the header
+                                    buffer = "SMSHEADER:" + phoneNumber;
+                                    //buffer += ":" + m_date.getTime().toString();
+                                    buffer += ":" + 1;
 
-                                Log.d(SMS.class.getSimpleName(), "header : " + buffer);
+                                    Log.d(Incoming.class.getSimpleName(), "header : " + buffer);
 
-                                manager.send(buffer);
+                                    manager.send(buffer);
 
-                                // Send the body
-                                manager.send("SMSBODY:1:" + body);
+
+                                    // Send the body
+                                    manager.send("SMSBODY:1:" + body);
+
+                                    Log.d(Incoming.class.getSimpleName(), "body : " + body);
+
+                                } catch (Exception e) {
+                                    Log.d(Incoming.class.getSimpleName(), "Problème : " + e);
+                                }
+
+
 
                             } else {
-
                                 Log.d(Incoming.class.getSimpleName(), "Plus");
 
                                 // Send the header

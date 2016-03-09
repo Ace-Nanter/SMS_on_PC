@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.util.Log;                    // TODO : to remove
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -20,7 +21,7 @@ public class Main extends AppCompatActivity implements UsbInterface {
     private LinkManager link = null;
     private TextView console;
     private Button button;
-    private Button testButton;
+    //private Button testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,8 @@ public class Main extends AppCompatActivity implements UsbInterface {
             finish();
         }
 
-        // TODO : a supprimer
-        testButton = (Button) findViewById(R.id.testButton);
+
+        /*testButton = (Button) findViewById(R.id.testButton);
         if(testButton != null) {
             testButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -83,7 +84,7 @@ public class Main extends AppCompatActivity implements UsbInterface {
                     }
                 }
             });
-        }
+        }*/
     }
 
     @Override

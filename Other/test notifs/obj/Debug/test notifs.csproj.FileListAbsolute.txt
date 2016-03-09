@@ -1,9 +1,0 @@
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\bin\Debug\test notifs.exe.config
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\bin\Debug\test notifs.exe
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\bin\Debug\test notifs.pdb
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\bin\Debug\LibUsbDotNet.dll
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\obj\Debug\test notifs.csprojResolveAssemblyReference.cache
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\obj\Debug\test_notifs.Properties.Resources.resources
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\obj\Debug\test notifs.csproj.GenerateResource.Cache
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\obj\Debug\test notifs.exe
-D:\Ace\SkyDrive\ISIMA 2\SMS_on_PC\Other\test notifs\obj\Debug\test notifs.pdb
