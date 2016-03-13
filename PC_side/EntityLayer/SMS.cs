@@ -100,5 +100,9 @@ namespace EntityLayer
             get { return m_contact; }
             set { m_contact = value; }
         }
+
+        public void appendBody(string s) {
+            this.m_body += s;
+        }
     }
 }

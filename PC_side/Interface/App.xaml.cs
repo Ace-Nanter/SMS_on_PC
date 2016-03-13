@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLayer;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -25,16 +26,19 @@ namespace Projet
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
             try {
-                MessageBox.Show("Une erreur est survenue, mais aucune crainte, elle a été gérée !",
-                                Assembly.GetExecutingAssembly().GetName().Name,
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-
-                e.Handled = true;   // Sinon crash l'application
+                LogManager.WriteToFile(e.Exception.Message, "App");
             }
             catch (Exception) {
                 // Nothing
             }
+
+
+
+
+
+
+
+
         }
     }
 }

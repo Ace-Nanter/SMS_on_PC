@@ -93,17 +93,14 @@ namespace DataAccessLayer
         {
             string tmp = num;
             if(tmp.StartsWith("+33")) {
-                tmp = "0" + tmp.Substring(3, num.Length - 1);
-            }
-            else if(tmp.StartsWith("0")) {
-                tmp = "+33" + tmp.Substring(1, num.Length - 1);
+                tmp = "0" + tmp.Substring(3);
             }
 
             if (contacts != null)
             {
                 foreach (Contact c in contacts)
                 {
-                    if (c.Num.Equals(num) || c.Num.Equals(num.Replace("0", "+33")))
+                    if (c.Num.Equals(tmp))
                         return c;
                 }
             }

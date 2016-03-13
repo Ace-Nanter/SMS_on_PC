@@ -30,7 +30,7 @@
                         <TextBlock Text="{Binding ElementName=AppWindow, Path=Title}" Style="{StaticResource ApplicationTitle}"/>
                     </Border>
                     <Border  Height="30" Width="160">
-                        <TextBlock x:Name="StateText" Text="Non Connecté" FontStyle="Italic" Foreground="Gray" HorizontalAlignment="Left"/>
+                        <TextBlock x:Name="StateText" FontStyle="Italic" Foreground="Gray" HorizontalAlignment="Left"/>
                     </Border>
                     <Border Height="20" Width="15">
                         <TextBlock TextWrapping="Wrap">

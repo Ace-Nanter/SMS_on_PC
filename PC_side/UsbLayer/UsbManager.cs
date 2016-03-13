@@ -3,6 +3,7 @@ using System.Text;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 using EntityLayer;
+using BusinessLayer;
 
 namespace UsbLayer {
 
@@ -117,14 +118,16 @@ namespace UsbLayer {
                     choix = 0;
                 }
                 else {
-                    // TODO : ici changer les protocoles pour afficher la liste
+                    throw new Exception("Several Devices found !");
+                }
+                /* else {
                     Console.WriteLine("Appareils disponibles :");
                     for (int k = 0; k < DeviceList.Count; k++)
                         Console.WriteLine("{0} - {1}", k, DeviceList[k].FullName);
 
                     Console.WriteLine("Veuillez choisir un appareil auquel se connecter");
                     choix = int.Parse(Console.ReadLine());
-                }
+                } */
 
                 if (!DeviceList[choix].Open(out m_device))
                     throw new Exception("Impossible de se connecter au téléphone !");
@@ -177,13 +180,17 @@ namespace UsbLayer {
                 else if (DeviceList.Count == 1)
                     choix = 0;
                 else {
+                    throw new Exception("Several devices found !");
+                }
+                /*else {
+               
                     Console.WriteLine("Choississez l'appareil en mode accessory :");
                     for (int k = 0; k < DeviceList.Count; k++)
                         Console.WriteLine("{0} - {1}", k, DeviceList[k].FullName);
 
                     Console.WriteLine("Veuillez choisir un appareil auquel se connecter");
                     choix = int.Parse(Console.ReadLine());
-                }
+                }*/
 
                 int attempts = 0;
                 while (attempts < 5)                            // On se reconnecte 5 fois (par précaution)
@@ -224,9 +231,9 @@ namespace UsbLayer {
             catch (Exception e) {
                 flag = false;
                 m_connected = false;
-                // TODO : un petit log ?
-                Console.WriteLine(e);
+                LogManager.WriteToFile(e.Message, "UsbManager");
                 this.stop();                                        // On arrête tout
+                // TODO : appel à une fonction de unableToconnect ?
             }
 
             return flag;
@@ -281,9 +288,6 @@ namespace UsbLayer {
                     buffer = "SMSBODY:" + com + ":";
                     buffer += sms.Body.Substring(i, Math.Min(limit, sms.Body.Length - i));
                     com++;
-
-                    // TODO : to remove
-                    Console.WriteLine("Envoi de {0}", buffer);
 
                     send(buffer);
                 }
@@ -343,6 +347,14 @@ namespace UsbLayer {
         /// <param name="msg"></param>
         public void hasRead(string msg) {
             m_listener.hasRead(msg);
+        }
+
+        /// <summary>
+        /// Appelle la méthode smsReceived du listener
+        /// </summary>
+        /// <param name="sms">SMS reçu</param>
+        public void smsReceived(SMS sms) {
+            m_listener.smsReceived(sms);
         }
 
         /// <summary>

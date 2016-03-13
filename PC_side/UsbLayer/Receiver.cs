@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
+using BusinessLayer;
 
 namespace UsbLayer {
     class Receiver {
@@ -66,12 +67,12 @@ namespace UsbLayer {
                 msg = Encoding.UTF8.GetString(buffer);
                 if (!string.IsNullOrEmpty(msg)) {                                   // Is the message exploitable ?
                     m_Received.Enqueue(msg);                                        // Enqueue the message        
-                    Console.WriteLine(">>> {0}", msg);                              // TODO : to delete
+                    m_manager.hasRead(msg);
                 }
                 #endregion
             }
             catch (Exception e) {
-                Console.WriteLine("An exception occurred : " + e);
+                LogManager.WriteToFile(e.Message, "Receiver");
             }
         }
 
@@ -109,7 +110,6 @@ namespace UsbLayer {
         /// <param name="e">Exception qui peut avoir causer l'arrêt</param>
         public void stop() {
 
-            Console.WriteLine("Désactivation du receiver...");
             // Desactivate the event reading
             m_reader.DataReceived -= (doRead);
             m_reader.DataReceivedEnabled = false;

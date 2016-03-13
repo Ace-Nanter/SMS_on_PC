@@ -110,7 +110,7 @@ public class Sender {
      * Pop the FIFO
      */
     public void pop() {
-        m_toSend.poll();
+        m_toSend.remove();
     }
 
     public boolean stop() {

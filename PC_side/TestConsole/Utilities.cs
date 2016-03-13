@@ -28,9 +28,13 @@ namespace TestConsole {
         /// </summary>
         /// <param name="msg"></param>
         public void hasRead(string msg) {
-            Console.WriteLine("Message reçu : " + msg);
+            Console.WriteLine(">>> " + msg);
         }
 
+        /// <summary>
+        /// Display a new SMS received
+        /// </summary>
+        /// <param name="sms"></param>
         public void smsReceived(SMS sms) {
             Console.WriteLine("Nouveau message reçu : " + sms.Body);
         }

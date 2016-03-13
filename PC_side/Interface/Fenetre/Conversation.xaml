@@ -48,7 +48,7 @@
                 </ScrollViewer>
             </Border>    
             <TextBox x:Name="TextField" Grid.Row="2" Grid.Column="0" Margin="5,5,5,5" Background="{StaticResource ApplicationBackgroundColor}" Foreground="White"/>
-            <UserControls:AppButton Grid.Row="2" Grid.Column="1" Label="Envoyer" Event="AppButton_Click"/>
+            <UserControls:AppButton Grid.Row="2" Grid.Column="1" Label="Envoyer" Event="AppButton_Click" Loaded="AppButton_Loaded"/>
         </Grid>
     </Border>
 </Window>

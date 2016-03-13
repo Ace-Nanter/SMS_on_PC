@@ -8,6 +8,9 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import fr.isima.sms_on_pc.USB.LinkManager;
 
 /**
@@ -30,13 +33,19 @@ public class Incoming extends BroadcastReceiver {
             if (bundle != null) {
                 final Object[] pdusObj = (Object[]) bundle.get("pdus");
 
+                // Get the differents parts of the message
                 for (int i = 0; i < pdusObj.length; i++) {
                     SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
 
                     // Get the informations
                     String body = currentMessage.getDisplayMessageBody();
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-                    long date = currentMessage.getTimestampMillis();
+                    long tmpDate = currentMessage.getTimestampMillis();
+
+                    Calendar date = Calendar.getInstance();
+                    date.setTimeInMillis(tmpDate);
+                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
+                    String formatDate = format.format(date.getTime());
 
                     int nbComs;
                     final int limit = 80;
@@ -63,39 +72,23 @@ public class Incoming extends BroadcastReceiver {
 
                             // Check if the message is multiparted or not
                             if (body.length() < 80) {
+                                // Send the header
+                                buffer = "SMSHEADER:" + phoneNumber;
+                                buffer += ":" + formatDate;
+                                buffer += ":" + 1;
 
-                                // TODO : to remove
-                                try {
-                                    Log.d(Incoming.class.getSimpleName(), "Une page");
+                                Log.d(Incoming.class.getSimpleName(), "header : " + buffer);
 
-                                    // Send the header
-                                    buffer = "SMSHEADER:" + phoneNumber;
-                                    //buffer += ":" + m_date.getTime().toString();
-                                    buffer += ":" + 1;
-
-                                    Log.d(Incoming.class.getSimpleName(), "header : " + buffer);
-
-                                    manager.send(buffer);
+                                manager.send(buffer);
 
 
-                                    // Send the body
-                                    manager.send("SMSBODY:1:" + body);
-
-                                    Log.d(Incoming.class.getSimpleName(), "body : " + body);
-
-                                } catch (Exception e) {
-                                    Log.d(Incoming.class.getSimpleName(), "Problème : " + e);
-                                }
-
-
-
+                                // Send the body
+                                manager.send("SMSBODY:1:" + body);
                             } else {
-                                Log.d(Incoming.class.getSimpleName(), "Plus");
-
                                 // Send the header
                                 nbComs = (body.length() + limit - 1) / limit;
                                 buffer = "SMSHEADER:" + phoneNumber + ":";
-                                //buffer += ":" + m_date.getTime().toString();
+                                buffer += ":" + formatDate;
                                 buffer += ":" + nbComs;
 
                                 Log.d(SMS.class.getSimpleName(), "header : " + buffer);
@@ -109,8 +102,6 @@ public class Incoming extends BroadcastReceiver {
                                     buffer += body.substring(k, k + Math.min(limit, body.length() - k));
                                     com++;
 
-                                    Log.d(SMS.class.getSimpleName(), "body : " + buffer);
-
                                     manager.send(buffer);
                                 }
                             }
@@ -118,13 +109,10 @@ public class Incoming extends BroadcastReceiver {
                             Log.d(SMS.class.getSimpleName(), "Manager problem !");
                         }
                     }
-                    //sms.sendUSB();
                 }
             }
         } catch (Exception e) {
             Log.e("SmsReceiver", "Exception smsReceiver" + e);
         }
     }
-
-
 }

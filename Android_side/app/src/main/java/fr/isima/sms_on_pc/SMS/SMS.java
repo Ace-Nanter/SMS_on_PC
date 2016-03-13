@@ -23,25 +23,11 @@ public class SMS {
     private int m_ID;                           // ID of the message
     private String m_phoneNumber;              // Phone number
     private String m_body;                      // Body of the message
-    private Calendar m_date;                    // Date du message
 
     public SMS() {
         m_ID = -1;
         m_phoneNumber = "";
         m_body = "";
-    }
-
-    /**
-     * Constructor for received SMS
-     * @param phone_number Phone number of the sender
-     * @param body Body of the message
-     */
-    public SMS(String phone_number, String body, long date) {
-        this();
-        m_phoneNumber = phone_number;
-        m_body = body;
-        //m_date = Calendar.getInstance();
-        //m_date.setTimeInMillis(date);
     }
 
     /**
@@ -94,71 +80,5 @@ public class SMS {
             Uri sentURI = Uri.parse("content://sms/sent");
             m_context.getContentResolver().insert(sentURI, values);
         }
-    }
-
-    /**
-     * Send the message to the computer by USB
-     */
-    public void sendUSB() {
-        int nbComs;
-        final int limit = 80;
-        String buffer = "";
-
-        LinkManager manager = null;
-
-        if(m_body == null || m_body == "") {
-            Log.d(SMS.class.getSimpleName(), "Empty message !");
-        }
-
-        // Get the manager
-        try {
-            manager = LinkManager.getInstance(null, null);
-        }
-        catch(Exception e) {
-            Log.d(SMS.class.getSimpleName(), "An exception occurred : " + e);
-            manager = null;
-        }
-
-        if(manager != null) {
-
-            // Check if the message is multiparted or not
-            if(m_body.length() < 80) {
-                // Send the header
-                buffer = "SMSHEADER:" + m_phoneNumber;
-                //buffer += ":" + m_date.getTime().toString();
-                buffer += ":" + 1;
-
-                Log.d(SMS.class.getSimpleName(), "header : " + buffer);
-
-                manager.send(buffer);
-
-                // Send the body
-                manager.send("SMSBODY:1:" + m_body);
-
-            }
-            else {
-                // Send the header
-                nbComs = (m_body.length() + limit - 1) / limit;
-                buffer = "SMSHEADER:" + m_phoneNumber + ":";
-                //buffer += ":" + m_date.getTime().toString();
-                buffer += ":" + nbComs;
-
-                manager.send(buffer);
-
-                // Send the body
-                int com = 1;
-                for (int i = 0; i < m_body.length() ; i+= limit) {
-                    buffer = "SMSBODY:" + com  + ":";
-                    buffer += m_body.substring(i, i + Math.min(limit, m_body.length() - i));
-                    com++;
-
-                    manager.send(buffer);
-                }
-            }
-        }
-        else {
-            Log.d(SMS.class.getSimpleName(), "Manager problem !");
-        }
-
     }
 }

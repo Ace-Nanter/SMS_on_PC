@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
+using BusinessLayer;
 
 namespace UsbLayer {
 
@@ -85,7 +86,7 @@ namespace UsbLayer {
                                 #endregion
                             }
                             catch (Exception e) {
-                                Console.WriteLine("An exception occured : " + e);
+                                LogManager.WriteToFile(e.Message, "Sender");
                             }
 
                             // Si on a un ACK à envoyer, on déqueue
@@ -99,7 +100,7 @@ namespace UsbLayer {
                         }
 
                         if(m_toSend.Count > 0 && string.Equals(msg, m_toSend.Peek())) {
-                            Console.WriteLine("Fail to send : {0}", msg);
+                            LogManager.WriteToFile("Fail to Send : " + msg, "Sender");
                             pop();
                         }
                     }

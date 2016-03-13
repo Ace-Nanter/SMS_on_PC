@@ -16,8 +16,8 @@ namespace Projet
     public partial class MainWindow : System.Windows.Window, UsbInterface
     {
 
-        Contact ct;
-        UsbManager m_manager = null;
+        private Contact ct;
+        private UsbManager m_manager = null;
         List<Conversation> convos;
 
         public MainWindow()
@@ -43,8 +43,7 @@ namespace Projet
                 }
             }
             catch(Exception e) {
-                MessageBox.Show("An exception occured : " + e,
-                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogManager.WriteToFile("Error during connection", "Interface");
             }
         }
 
@@ -93,9 +92,6 @@ namespace Projet
             this.StateText.Text = "Connexion ...";
         }
 
-
-
-
         private void expander_Expanded(object sender, RoutedEventArgs e)
         {
             ct = new Contact(this);
@@ -134,15 +130,16 @@ namespace Projet
         }
 
         public void hasRead(string msg) {
-            
+            Console.WriteLine(">>> " + msg);
         }
 
         public void hasBeenConnected() {
-            //StateText.Text = "Connecté";
+            //StateText.Text = "Connecté";                // TODO : to change
+            
         }
 
         public void hasBeenStopped() {
-            StateText.Text = "Arrêté";
+            //StateText.Text = "Arrêté";
         }
 
         /// <summary>
@@ -150,7 +147,7 @@ namespace Projet
         /// </summary>
         /// <param name="sms"></param>
         public void smsReceived(SMS sms) {
-            
+            // Do something to notify
         }
 
         private void NewConv_Click(object sender, RoutedEventArgs e)
